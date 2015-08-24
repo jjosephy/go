@@ -1,0 +1,37 @@
+<html>
+    <head>
+        <title>Interview Panel</title>
+        <link rel="stylesheet" href="/css/main.css" >
+        <script src="/script/react.js"></script>
+        <script src="/script/JSXTransformer.js"></script>
+        <script src="/script/jquery-2.1.4.min.js"></script>
+        <script src="/ui/components.js" type="text/jsx"></script>
+        <script type="text/jsx">
+            $(document).ready(function() {
+                var dialog = React.render(
+                    <Dialog />,
+                    document.getElementById('dialog')
+                );
+
+                React.render(
+                    <Header dialog={dialog}/>,
+                    document.getElementById('header')
+                );
+                /*
+                React.render(
+                    <CommentPanel />,
+                    document.getElementById('content')
+                );
+                */
+            });
+        </script>
+    </head>
+    <body>
+        <div id="header">
+        </div>
+        <div id="content">
+        </div>
+        <div id="dialog">
+        </div>
+    </body>
+</html>
