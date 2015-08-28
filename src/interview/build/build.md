@@ -13,3 +13,13 @@ go build interview
 go install -gcflags "-N -l" interview (DEBUG)
 
 export GOPATH=$HOME/work
+
+GET GO
+https://golang.org/doc/install#install
+
+tar -C /usr/local -xzf <version>
+
+Add /usr/local/go/bin to the PATH environment variable. You can do this by adding this line to your /etc/profile (for a system-wide installation) or $HOME/.profile:
+
+export PATH=$PATH:/usr/local/go/bin
+
