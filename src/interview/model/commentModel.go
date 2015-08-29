@@ -3,7 +3,7 @@ package model
 type CommentModel struct {
     Content         string
     Interviewer     string
-    InterviewerId   int
+    InterviewerId   string
 }
 
 type Comments []CommentModel

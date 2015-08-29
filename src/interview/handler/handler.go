@@ -3,9 +3,9 @@ package handler
 import (
     "encoding/json"
     "fmt"
-    "interview/contract/v1"
+    "interview/converter"
     "interview/httperror"
-    "interview/model"
+    //"interview/model"
     "interview/repository"
     "net/http"
     "strconv"
@@ -56,42 +56,18 @@ func InterviewHandler(data repository.InterviewRepository) http.HandlerFunc {
                   name = ""
               }
 
-              // TODO: integrate with repository to build model and translate
-              st := data.GetInterview(id, name)
-
-              comments := model.Comments {
-                  model.CommentModel { Content: st, Interviewer: "interviewer 0", InterviewerId: 0 },
-                  model.CommentModel { Content: st, Interviewer: "interviewer 1", InterviewerId: 1 },
-                  model.CommentModel { Content: st, Interviewer: "interviewer 2", InterviewerId: 2 },
-              }
-
-              // Get a model and translate that
-              m := model.InterviewModel {
-                  Candidate: "Candidate Name",
-                  Id: "hardcodedid",
-                  Comments: comments,
-              }
+              // TODO: //Find by id or name
+              model := data.GetInterview(id, name)
 
               switch version {
                   case 1.0:
-                      m.Id = "version 1"
+                     ct := converter.ConvertModelToContractV1(model)
+                     json.NewEncoder(w).Encode(ct)
                   default:
                       httperror.UnsupportedVersion(w)
                       return;
               }
 
-              // TODO: model->contract contract->model
-              //Find by id or name
-              json.NewEncoder(w).Encode(contract.InterviewContractV1 {
-                  Id: m.Id,
-                  Interviewer: "rebuild",
-                  Candidate: "Bob",
-                  Comments: contract.CommentsV1 {
-                      contract.CommentContractV1  { Content: "Content", Interviewer: "interviewer 0", InterviewerId: "0" },
-                      contract.CommentContractV1  { Content: "Content", Interviewer: "interviewer 1", InterviewerId: "1" },
-                      contract.CommentContractV1  { Content: "Content", Interviewer: "interviewer 2", InterviewerId: "2" },
-                  },
-              })
 
           case "POST":
               fmt.Fprintf(w, "POST Success")

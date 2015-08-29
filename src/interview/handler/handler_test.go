@@ -6,6 +6,7 @@ import (
     "fmt"
     "interview/contract/v1"
     "interview/httperror"
+    "interview/model"
     "io"
     "io/ioutil"
     "net/http"
@@ -17,15 +18,28 @@ import (
 type MockInterviewRepository struct {
 }
 
-func(r *MockInterviewRepository) GetInterview(id string, name string) string {
-    return "Mock"
+func(r *MockInterviewRepository) GetInterview(id string, name string) model.InterviewModel {
+    comments := model.Comments {
+        model.CommentModel { Content: "Mock Comment", Interviewer: "interviewer 0", InterviewerId: "0" },
+        model.CommentModel { Content: "Mock Comment", Interviewer: "interviewer 1", InterviewerId: "1" },
+        model.CommentModel { Content: "Mock Comment", Interviewer: "interviewer 2", InterviewerId: "2" },
+    }
+
+    // Get a model and translate that
+    m := model.InterviewModel {
+        Candidate: "Candidate",
+        Id: "hardcodedid",
+        Comments: comments,
+    }
+
+    return m
 }
 
 var h http.HandlerFunc
 var ts *httptest.Server
 
 func ValidateC1(t *testing.T, c contract.InterviewContractV1) {
-    if c.Candidate != "Bob" {
+    if c.Candidate != "Candidate" {
         t.Fatal("Candiate name not correct")
     }
 
