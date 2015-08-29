@@ -6,10 +6,11 @@ import (
 
 type InterviewRepository interface {
     GetInterview(id string, name string) model.InterviewModel
+    //SaveInterview(id string, model model.InterviewModel)
 }
 
 type DBInterviewRepository struct {
-    
+
 }
 
 func(r *DBInterviewRepository) GetInterview(id string, name string) model.InterviewModel {

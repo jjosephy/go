@@ -2,10 +2,8 @@ package handler
 
 import (
     "encoding/json"
-    "fmt"
     "interview/converter"
     "interview/httperror"
-    //"interview/model"
     "interview/repository"
     "net/http"
     "strconv"
@@ -13,8 +11,6 @@ import (
 
 func InterviewHandler(data repository.InterviewRepository) http.HandlerFunc {
   return func (w http.ResponseWriter, r *http.Request) {
-      //TODO: validate that the passed in repository is not null
-
       var version float64
       h := r.Header.Get("api-version")
       if h == "" {
@@ -44,7 +40,7 @@ func InterviewHandler(data repository.InterviewRepository) http.HandlerFunc {
 
               var id string
               if len(qId) > 0 {
-                  id =  qId[0]
+                  id = qId[0]
               } else {
                   id = ""
               }
@@ -70,7 +66,8 @@ func InterviewHandler(data repository.InterviewRepository) http.HandlerFunc {
 
 
           case "POST":
-              fmt.Fprintf(w, "POST Success")
+              // Save to Database
+              // Return OK
           default:
               w.WriteHeader(http.StatusMethodNotAllowed)
               return

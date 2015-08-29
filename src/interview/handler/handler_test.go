@@ -224,3 +224,38 @@ func Test_Success_ValidRequest_V1(t *testing.T) {
         "",
         http.StatusOK)
 }
+
+func Test_Success_PostValidRequest_V1(t *testing.T) {
+    cn := contract.InterviewContractV1 {
+        Id: "Id",
+        Candidate: "Candidate",
+        Comments: contract.CommentsV1 {
+            contract.CommentContractV1 { Content: "Mock Comment", Interviewer: "interviewer 0", InterviewerId: "0" },
+            contract.CommentContractV1 { Content: "Mock Comment", Interviewer: "interviewer 1", InterviewerId: "1" },
+            contract.CommentContractV1 { Content: "Mock Comment", Interviewer: "interviewer 2", InterviewerId: "2" },
+        },
+    }
+
+    s, err := json.Marshal(cn)
+    if err != nil {
+        t.Fatalf("Error trying to serialize json %v", err)
+    }
+
+    b := bytes.NewBuffer(s)
+    client := &http.Client {}
+    req, err := http.NewRequest("POST", ts.URL, b)
+    if err != nil {
+        t.Fatalf("Unexpected error trying to create a request %v", err)
+    }
+
+    req.Header.Add("Api-Version", "1.0")
+    resp, err := client.Do(req)
+
+    if err != nil {
+        t.Fatalf("Unexpected error %v", err)
+    }
+
+    if resp.StatusCode != http.StatusOK {
+        t.Fatal("Received wrong status code")
+    }
+}
