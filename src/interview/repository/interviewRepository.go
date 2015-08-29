@@ -9,6 +9,7 @@ type InterviewRepository interface {
 }
 
 type DBInterviewRepository struct {
+    
 }
 
 func(r *DBInterviewRepository) GetInterview(id string, name string) model.InterviewModel {
