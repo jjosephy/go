@@ -3,6 +3,7 @@ package handler
 import (
     "bytes"
     "encoding/json"
+    "errors"
     "fmt"
     "interview/contract/v1"
     "interview/httperror"
@@ -18,21 +19,31 @@ import (
 type MockInterviewRepository struct {
 }
 
-func(r *MockInterviewRepository) GetInterview(id string, name string) model.InterviewModel {
+func(r *MockInterviewRepository) SaveInterview(m model.InterviewModel) (error) {
+    return nil
+}
+
+func(r *MockInterviewRepository) GetInterview(id string, name string) (model.InterviewModel, error) {
+    var m model.InterviewModel
+
+    if id == "" && name == "" {
+        return m, errors.New("invalid search params provided")
+    }
+
     comments := model.Comments {
-        model.CommentModel { Content: "Mock Comment", Interviewer: "interviewer 0", InterviewerId: "0" },
-        model.CommentModel { Content: "Mock Comment", Interviewer: "interviewer 1", InterviewerId: "1" },
-        model.CommentModel { Content: "Mock Comment", Interviewer: "interviewer 2", InterviewerId: "2" },
+        model.CommentModel { Content: "db Content", Interviewer: "interviewer 0", InterviewerId: "0" },
+        model.CommentModel { Content: "db Content", Interviewer: "interviewer 1", InterviewerId: "1" },
+        model.CommentModel { Content: "db Content", Interviewer: "interviewer 2", InterviewerId: "2" },
     }
 
     // Get a model and translate that
-    m := model.InterviewModel {
+    m = model.InterviewModel {
         Candidate: "Candidate",
         Id: "hardcodedid",
         Comments: comments,
     }
 
-    return m
+    return m, nil
 }
 
 var h http.HandlerFunc
