@@ -1,6 +1,6 @@
 package contract
 
-type ErrorDetailV1 struct {
+type ErrorContractV1 struct {
     Message    string       `json:"message"`
     Code       int          `json:"errorCode"`
 }

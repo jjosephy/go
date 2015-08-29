@@ -1,9 +1,9 @@
 package model
 
 type CommentModel struct {
-    Content         string      `json:"comments"`
-    Interviewer     string      `json:"interviewer"`
-    InterviewerId   int         `json:"interviewer"`
+    Content         string
+    Interviewer     string
+    InterviewerId   int
 }
 
 type Comments []CommentModel

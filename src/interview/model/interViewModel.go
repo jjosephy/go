@@ -1,8 +1,8 @@
 package model
 
 type InterviewModel struct {
-    Candidate           string              `json:"candidate"`
-    Comments            []CommentModel      `json:"comments"`
-    Complete            bool                `json:"complete"`
-    Id                  string              `json:"id"`
+    Candidate   string
+    Comments    []CommentModel
+    Complete    bool
+    Id          string
 }
