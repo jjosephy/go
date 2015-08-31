@@ -52,9 +52,7 @@ func InterviewHandler(data repository.InterviewRepository) http.HandlerFunc {
                   name = ""
               }
 
-              // TODO: //Find by id or name
               model, err:= data.GetInterview(id, name)
-
               if err != nil {
                   httperror.GetInterviewFailed(w, err)
                   return

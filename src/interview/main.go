@@ -15,7 +15,8 @@ func main() {
     mux.Handle("/", http.FileServer(http.Dir("../src/interview/web/")))
 
     // TODO: figure out injection pattern and config
-    mux.HandleFunc("/interview", handler.InterviewHandler(new(repository.DBInterviewRepository)))
+    repo := repository.DBInterviewRepository{Uri: "mongodb://localhost"}
+    mux.HandleFunc("/interview", handler.InterviewHandler(&repo))
 
     fmt.Println("Server Running")
     http.ListenAndServe(":8080", mux)

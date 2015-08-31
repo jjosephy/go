@@ -2,6 +2,7 @@ package repository
 
 import (
     "errors"
+    "gopkg.in/mgo.v2"
     "interview/model"
 )
 
@@ -11,10 +12,23 @@ type InterviewRepository interface {
 }
 
 type DBInterviewRepository struct {
+    DBSession *mgo.Session
+    Uri string
+}
 
+func (r *DBInterviewRepository) checkConnection()(error) {
+    var err error
+    r.DBSession, err = mgo.Dial(r.Uri)
+    if err != nil {
+        return err
+    }
+    return  nil
 }
 
 func(r *DBInterviewRepository) SaveInterview(m model.InterviewModel) (error) {
+    if err := r.checkConnection(); err != nil {
+        return err
+    }
     return nil
 }
 
