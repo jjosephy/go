@@ -1,0 +1,28 @@
+
+type R struct {
+    ID        bson.ObjectId `bson:"_id,omitempty"`
+    Name      string
+}
+
+
+"gopkg.in/mgo.v2"
+"gopkg.in/mgo.v2/bson"
+
+s, err := mgo.Dial("mongodb://localhost")
+        if err != nil {
+        fmt.Printf("Can't connect to mongo, go error %v\n", err)
+        os.Exit(1)
+    }
+
+    defer s.Close()
+
+    result := R {}
+    c := s.DB("test").C("docs")
+    err = c.Find(bson.M{"name": "test"}).One(&result)
+
+    if err != nil {
+      fmt.Printf("got an error finding a doc %v\n", err)
+      os.Exit(1)
+    } else {
+        fmt.Printf("all good %v", result)
+    }
