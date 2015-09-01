@@ -20,7 +20,7 @@ func Test_Success_SerializeCommentModel(t *testing.T) {
     // Get a model and translate that
     m := InterviewModel {
         Candidate: "Candidate Name",
-        Id: "hardcodedid",
+        QueryId: "hardcodedid",
         Comments: Comments {
             CommentModel { Content: "db Content", Interviewer: "interviewer 0", InterviewerId: "0" },
             CommentModel { Content: "db Content", Interviewer: "interviewer 1", InterviewerId: "1" },
@@ -32,7 +32,7 @@ func Test_Success_SerializeCommentModel(t *testing.T) {
     if err != nil {
         t.Fatalf("Failed Marshal model %v\n", err)
     }
-    
+
     assertAreEqual(t, m.Candidate == "Candidate Name", "Candiate Names dont match")
 }
 

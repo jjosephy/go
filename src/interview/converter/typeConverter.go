@@ -19,7 +19,7 @@ func ConvertModelToContractV1 (m model.InterviewModel) (c contract.InterviewCont
     }
 
     return contract.InterviewContractV1 {
-        Id: m.Id,
+        Id: m.QueryId,
         Candidate: m.Candidate,
         Comments: comments,
     }

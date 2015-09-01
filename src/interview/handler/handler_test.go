@@ -39,7 +39,7 @@ func(r *MockInterviewRepository) GetInterview(id string, name string) (model.Int
     // Get a model and translate that
     m = model.InterviewModel {
         Candidate: "Candidate",
-        Id: "hardcodedid",
+        QueryId: "1",
         Comments: comments,
     }
 
