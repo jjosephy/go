@@ -1,14 +1,48 @@
 package converter
 
 import (
+    "bytes"
+    "encoding/json"
+    "interview/contract/v1"
+    "io"
     "testing"
 )
 
+type nopCloser struct {
+    io.Reader
+}
 
-func Test_Success_ConvertModelToContractSimple(t *testing.T) {
+func (_ nopCloser) Close() (error) {
+    return nil
+}
 
+func Test_Success_DecodeContractFromBodyV1(t *testing.T) {
+    c := contract.InterviewContractV1 {
+        Candidate: "Candidate",
+        Id: "2",
+        Comments: contract.CommentsV1 {
+            contract.CommentContractV1 { Content: "db Content", Interviewer: "interviewer 0", InterviewerId: "0" },
+            contract.CommentContractV1 { Content: "db Content", Interviewer: "interviewer 1", InterviewerId: "1" },
+            contract.CommentContractV1 { Content: "db Content", Interviewer: "interviewer 2", InterviewerId: "2" },
+        },
+    }
+
+    s, err := json.Marshal(c)
+    if err != nil {
+        t.Fatalf("Marshing object failed %v \n", err)
+    }
+
+    str := string(s)
+    b := nopCloser { bytes.NewBufferString(str) }
+
+    cx, err := DecodeContractFromBodyV1(b)
+    if err != nil {
+        t.Fatalf("Failed to decode %v \n", err)
+    }
+
+    t.Log("Here", cx)
 }
 
 func Test_Fail_ConvertModelToContract_NullModel(t *testing.T) {
-    
+
 }

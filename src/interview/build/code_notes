@@ -42,3 +42,6 @@ s, err := mgo.Dial("mongodb://localhost")
     } else {
         fmt.Printf("all good %v", result)
     }
+
+    db.seed.update({"increment" : "true"}, {$set: {"val" : "1" }})
+db.seed.update({"increment" : "true"}, {$set: {"val" : "0" }})

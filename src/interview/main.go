@@ -19,7 +19,7 @@ func main() {
     mux.HandleFunc("/interview", handler.InterviewHandler(&repo))
 
     fmt.Println("Server Running")
-    defer repo.DBSession.Close()
-    
+    //defer repo.DBSession.Close()
+
     http.ListenAndServe(":8080", mux)
 }

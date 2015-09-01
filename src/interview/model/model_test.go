@@ -20,7 +20,7 @@ func Test_Success_SerializeCommentModel(t *testing.T) {
     // Get a model and translate that
     m := InterviewModel {
         Candidate: "Candidate Name",
-        QueryId: "hardcodedid",
+        QueryId: 1,
         Comments: Comments {
             CommentModel { Content: "db Content", Interviewer: "interviewer 0", InterviewerId: "0" },
             CommentModel { Content: "db Content", Interviewer: "interviewer 1", InterviewerId: "1" },

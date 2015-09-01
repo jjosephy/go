@@ -8,6 +8,6 @@ type InterviewModel struct {
     Candidate           string
     Comments            []CommentModel
     Complete            bool
-    QueryId             string //TODO: make this a uuid
+    QueryId             int //TODO: make this a uuid
     Id                  bson.ObjectId `bson:"_id,omitempty"`
 }

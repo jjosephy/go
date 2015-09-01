@@ -5,6 +5,7 @@ import (
     "interview/converter"
     "interview/httperror"
     "interview/repository"
+    "interview/model"
     "net/http"
     "strconv"
 )
@@ -52,27 +53,52 @@ func InterviewHandler(data repository.InterviewRepository) http.HandlerFunc {
                   name = ""
               }
 
-              // TODO: //Find by id or name
-              model, err:= data.GetInterview(id, name)
-
+              // TODO: Find by id or name
+              model, err := data.GetInterview(id, name)
               if err != nil {
-                  httperror.GetInterviewFailed(w, err)
-                  return
+                  switch err.Error() {
+                      case "not found":
+                          httperror.InterviewNotFound(w)
+                          return
+                      default:
+                          httperror.GetInterviewFailed(w, err)
+                          return
+                  }
               }
 
               switch version {
                   case 1.0:
-                     ct := converter.ConvertModelToContractV1(model)
-                     json.NewEncoder(w).Encode(ct)
+                     json.NewEncoder(w).Encode(converter.ConvertModelToContractV1(model))
                   default:
                       httperror.UnsupportedVersion(w)
                       return;
               }
 
-
           case "POST":
-              // Save to Database
-              // Return OK
+              // check version
+              // check to see if body is null
+
+              var m model.InterviewModel
+              switch version {
+                  case 1.0:
+                     c, err := converter.DecodeContractFromBodyV1(r.Body)
+                     if err != nil {
+                         httperror.FailedDecodingBody(w)
+                         return
+                     }
+                     m = converter.ConvertContractToModelV1(c)
+                  default:
+                      httperror.UnsupportedVersion(w)
+                      return;
+              }
+
+              // TODO: this is by value, try by ref
+              err := data.SaveInterview(m)
+              if err != nil {
+                  httperror.SaveInterviewFailed(w, err)
+                  return
+              }
+
           default:
               w.WriteHeader(http.StatusMethodNotAllowed)
               return

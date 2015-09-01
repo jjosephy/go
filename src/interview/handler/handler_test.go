@@ -39,7 +39,7 @@ func(r *MockInterviewRepository) GetInterview(id string, name string) (model.Int
     // Get a model and translate that
     m = model.InterviewModel {
         Candidate: "Candidate",
-        QueryId: "1",
+        QueryId: 1,
         Comments: comments,
     }
 
@@ -176,7 +176,7 @@ func Test_BadRequest_UnSupportedVersion_V1(t *testing.T) {
         fmt.Sprint(ts.URL, "?id=2"),
         headers,
         httperror.BADREQUEST_UNSUPPORTEDVERSION,
-        httperror.UNSUPPORTED_VERSION,
+        httperror.MSG_UNSUPPORTED_VERSION,
         http.StatusBadRequest)
 }
 
@@ -190,7 +190,7 @@ func TestBadRequest_NoQueryParameters_V1(t *testing.T) {
         ts.URL,
         headers,
         httperror.BADREQUEST_NOINPUTPARAMETERS,
-        httperror.NO_PARAMETERS_PROVIDED,
+        httperror.MSG_NO_PARAMETERS_PROVIDED,
         http.StatusBadRequest)
 }
 
@@ -204,7 +204,7 @@ func TestBadRequest_InvalidVersion_V1(t *testing.T) {
         ts.URL,
         headers,
         httperror.BADREQUEST_INVALIDVERSION,
-        httperror.INVALID_VERSION,
+        httperror.MSG_INVALID_VERSION,
         http.StatusBadRequest)
 }
 
@@ -218,7 +218,7 @@ func TestBadRequest_NoVersion_V1(t *testing.T) {
         ts.URL,
         headers,
         httperror.BADREQUEST_NOVERSION,
-        httperror.NO_VERSION_PROVIDED,
+        httperror.MSG_NO_VERSION_PROVIDED,
         http.StatusBadRequest)
 }
 
