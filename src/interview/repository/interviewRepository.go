@@ -2,54 +2,105 @@ package repository
 
 import (
     "errors"
+    "fmt"
     "gopkg.in/mgo.v2"
+    "gopkg.in/mgo.v2/bson"
     "interview/model"
 )
 
-type InterviewRepository interface {
+// Simple Data Access Layer //
+type IDAL interface {
     GetInterview(id string, name string) (model.InterviewModel, error)
-    SaveInterview(model model.InterviewModel) (error)
+    SaveInterview(m model.InterviewModel) (error)
+    CheckConnection()(error)
 }
 
-type DBInterviewRepository struct {
+type DAL struct {
     DBSession *mgo.Session
     Uri string
 }
 
-func (r *DBInterviewRepository) checkConnection()(error) {
-    var err error
-    r.DBSession, err = mgo.Dial(r.Uri)
-    if err != nil {
-        return err
-    }
-    return  nil
-}
-
-func(r *DBInterviewRepository) SaveInterview(m model.InterviewModel) (error) {
-    if err := r.checkConnection(); err != nil {
-        return err
-    }
-    return nil
-}
-
-func(r *DBInterviewRepository) GetInterview(id string, name string) (model.InterviewModel, error) {
+func (d *DAL)GetInterview(id string, name string) (model.InterviewModel, error) {
     var m model.InterviewModel
+
+    if err := d.CheckConnection(); err != nil {
+        return m, err
+    }
 
     if id == "" && name == "" {
         return m, errors.New("invalid search params provided")
     }
 
-    comments := model.Comments {
-        model.CommentModel { Content: "db Content", Interviewer: "interviewer 0", InterviewerId: "0" },
-        model.CommentModel { Content: "db Content", Interviewer: "interviewer 1", InterviewerId: "1" },
-        model.CommentModel { Content: "db Content", Interviewer: "interviewer 2", InterviewerId: "2" },
+    m = model.InterviewModel{}
+    err := d.DBSession.DB("interview").C("interviews").Find(bson.M{"Id": id}).One(&m)
+	if err != nil {
+		return m, err
+	}
+
+    fmt.Printf("in %v \n", m)
+
+    return m, nil
+}
+
+func (d *DAL)SaveInterview(m model.InterviewModel) (error) {
+    if err := d.CheckConnection(); err != nil {
+        return err
     }
 
-    // Get a model and translate that
-    m = model.InterviewModel {
-        Candidate: "Candidate Name",
-        Id: "hardcodedid",
-        Comments: comments,
+    return nil
+}
+
+func (d *DAL) CheckConnection()(error) {
+    var err error
+    if d.DBSession != nil {
+        /*
+        err = d.DBSession.Ping()
+        if err == nil {
+            return
+        }
+        */
+        return nil
+    }
+
+    d.DBSession, err = mgo.Dial(d.Uri)
+    if err != nil {
+        return err
+    }
+
+    return  nil
+}
+// End Data Access Layer //
+
+// Interview Repository Interface //
+type InterviewRepository interface {
+    GetInterview(id string, name string) (model.InterviewModel, error)
+    SaveInterview(model model.InterviewModel) (error)
+}
+
+// DBInterviewRespository Implementation //
+type DBInterviewRepository struct {
+    Dal *DAL
+}
+
+func CreateDBInterviewRespository(dal *DAL)(DBInterviewRepository, error) {
+    var d DBInterviewRepository
+    if dal == nil {
+        return d, errors.New("Invalid Arg: dal")
+    }
+
+    d.Dal = dal
+    return d, nil
+}
+
+func(r *DBInterviewRepository) SaveInterview(m model.InterviewModel) (error) {
+    return r.Dal.SaveInterview(m)
+}
+
+func(r *DBInterviewRepository) GetInterview(id string, name string) (model.InterviewModel, error) {
+    m, err := r.Dal.GetInterview(id, name)
+
+    if err != nil {
+        return m, err
     }
 
     return m, nil

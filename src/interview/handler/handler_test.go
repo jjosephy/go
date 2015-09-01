@@ -180,7 +180,7 @@ func Test_BadRequest_UnSupportedVersion_V1(t *testing.T) {
         http.StatusBadRequest)
 }
 
-func TestBadRequest_NoQueryParameters_V1(t *testing.T) {    
+func TestBadRequest_NoQueryParameters_V1(t *testing.T) {
     headers := map[string]string{
         "Api-Version": "1.0",
     }

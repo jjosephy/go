@@ -15,7 +15,10 @@ func main() {
     mux.Handle("/", http.FileServer(http.Dir("../src/interview/web/")))
 
     // TODO: figure out injection pattern and config
-    repo := repository.DBInterviewRepository{Uri: "mongodb://localhost"}
+    repo := repository.DBInterviewRepository{}
+    repo.Dal = new(repository.DAL) 
+    repo.Dal.Uri = "mongodb://localhost"
+
     mux.HandleFunc("/interview", handler.InterviewHandler(&repo))
 
     fmt.Println("Server Running")
