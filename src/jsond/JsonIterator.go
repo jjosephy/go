@@ -5,31 +5,44 @@ import (
 
 type JsonIterator struct {
     p int
-    s []interface {}
     l int
+    jn []JsonNode
     End bool
+
 }
 
-func (j *JsonIterator) Next() (JsonNode) {
-    if j.p == j.l {
-        j.End = true
-        return createNode(nil)
+func (j *JsonIterator) Next() (*JsonNode) {
+    if j == nil {
+        return nil
     }
 
-    v := j.s[j.p]
+    if j.p == j.l {
+        j.End = true
+        return nil
+    }
+
+    v := j.jn[j.p]
     j.p++
 
-    return createNode(v)
+    return &v
 }
 
-func (j *JsonIterator) Last() (JsonNode) {
-    j.p = j.l
+func (j *JsonIterator) Last() (*JsonNode) {
+    if j == nil {
+        return nil
+    }
+
+    j.p = j.l - 1
     j.End = true
-    return createNode(j.s[j.l])
+    return &j.jn[j.l - 1]
 }
 
-func (j *JsonIterator) First() (JsonNode) {
+func (j *JsonIterator) First() (*JsonNode) {
+    if j == nil {
+        return nil
+    }
+
     j.p = 0
     j.End = false
-    return createNode(j.s[0])
+    return &j.jn[0]
 }

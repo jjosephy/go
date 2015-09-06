@@ -6,20 +6,17 @@ import (
 )
 
 func createIterator(i *interface{}) (*JsonIterator) {
-
     s := reflect.ValueOf(*i)
-    ix := make([]interface{}, s.Len(), s.Len())
+    ix := make([]JsonNode, s.Len(), s.Len())
     for t := 0; t < s.Len(); t++ {
         x := s.Index(t)
-        ix[t] = x
-
-        // TODO: some how these maps are being set as structs and their kind becomes map.
+        ix[t] = createNode(x.Interface())
     }
 
     return &JsonIterator {
         p: 0,
-        s: ix,
         l: len(ix),
+        jn: ix,
     }
 }
 
@@ -27,18 +24,6 @@ func getKind(i interface{})(reflect.Kind) {
     t := reflect.TypeOf(i)
     return t.Kind()
 }
-/*
-func (n *JsonNode) assertType() (interface{}) {
-    switch getKind(n.i)  {
-        case reflect.String:
-            return n.i.(string)
-        case reflect.Map:
-            return n.i.(map[string]interface{})
-        default:
-            return n.i.(interface{})
-    }
-}
-*/
 
 func createNode(i interface{}) (JsonNode) {
     if i == nil {

@@ -81,24 +81,32 @@ func pln(n jsond.JsonNode) {
 }
 // Main entry point used to set up routes //
 func main() {
-    b := `{"candidate":"Candidate Name","comments":[{"content":"db Content","interviewer":"interviewer 0","interviewerId":"0"},{"content":"db Content","interviewer":"interviewer 1","interviewerId":"1"},{"content":"db Content","interviewer":"interviewer 2","interviewerId":"2"}],"complete":false,"id": 2}`
-    //b := `{"strings":["stringers","hokkcers","meaosfd"]}`
+    //b := `{"candidate":"Candidate Name","comments":[{"content":"db Content","interviewer":"interviewer 0","interviewerId":"0"},{"content":"db Content","interviewer":"interviewer 1","interviewerId":"1"},{"content":"db Content","interviewer":"interviewer 2","interviewerId":"2"}],"complete":false,"id": 2}`
+    b := `{"strings":["stringers","hokkcers","meaosfd"]}`
     root, _ := jsond.Parse(b)
     //plb(root)
 
     //tx := root.Property("candidate")
     //pln(tx)
 
-    s := root.Property("comments")
+    s := root.Property("strings")
     //pln(s)
 
-    iter := s.Iterator()
-    for ptr := iter.Next(); iter.End != true; ptr = iter.Next() {
-        ptr.Property("content")
-        //pln(bv)
-        //pln(ptr)
+    if iter := s.Iterator(); iter != nil {
 
+        jn := iter.Last()
+        pln(*jn)
+        iter.First()
+
+        for ptr := iter.Next(); iter.End != true; ptr = iter.Next() {
+            //c := ptr.Property("interviewer")
+            //pln(bv)
+            pln(*ptr)
+        }
+    } else {
+        fmt.Println("Iterator is nil")
     }
+
 
 
 
