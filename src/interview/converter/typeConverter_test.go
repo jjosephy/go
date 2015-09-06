@@ -3,7 +3,9 @@ package converter
 import (
     "bytes"
     "encoding/json"
+    "gopkg.in/mgo.v2/bson"
     "interview/contract/v1"
+    "interview/model"
     "io"
     "testing"
 )
@@ -14,6 +16,18 @@ type nopCloser struct {
 
 func (_ nopCloser) Close() (error) {
     return nil
+}
+
+func CreateTestModel() (model.InterviewModel) {
+    return model.InterviewModel {
+        Candidate: "Candidate Name",
+        Id: bson.NewObjectId(),
+        Comments: model.Comments {
+            model.CommentModel { Content: "db Content", Interviewer: "interviewer 0", InterviewerId: "0" },
+            model.CommentModel { Content: "db Content", Interviewer: "interviewer 1", InterviewerId: "1" },
+            model.CommentModel { Content: "db Content", Interviewer: "interviewer 2", InterviewerId: "2" },
+        },
+    }
 }
 
 func Test_Success_DecodeContractFromBodyV1(t *testing.T) {
@@ -43,6 +57,8 @@ func Test_Success_DecodeContractFromBodyV1(t *testing.T) {
     t.Log("Here", cx)
 }
 
-func Test_Fail_ConvertModelToContract_NullModel(t *testing.T) {
-
+func Test_Sucess_ConvertModelToContractV1(t *testing.T) {
+    m := CreateTestModel()
+    c := ConvertModelToContractV1(m)
+    t.Logf("c: %v", c)
 }

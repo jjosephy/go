@@ -8,6 +8,8 @@ import (
     "interview/model"
     "net/http"
     "strconv"
+
+    //"fmt"
 )
 
 func InterviewHandler(data repository.InterviewRepository) http.HandlerFunc {

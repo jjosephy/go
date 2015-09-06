@@ -5,6 +5,7 @@ import (
     "encoding/json"
     "errors"
     "fmt"
+    "gopkg.in/mgo.v2/bson"
     "interview/contract/v1"
     "interview/httperror"
     "interview/model"
@@ -39,7 +40,7 @@ func(r *MockInterviewRepository) GetInterview(id string, name string) (model.Int
     // Get a model and translate that
     m = model.InterviewModel {
         Candidate: "Candidate",
-        QueryId: 1,
+        Id: bson.NewObjectId(),
         Comments: comments,
     }
 

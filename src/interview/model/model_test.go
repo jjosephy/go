@@ -2,6 +2,7 @@ package model
 
 import (
     "encoding/json"
+    "gopkg.in/mgo.v2/bson"
     "testing"
 )
 
@@ -20,7 +21,7 @@ func Test_Success_SerializeCommentModel(t *testing.T) {
     // Get a model and translate that
     m := InterviewModel {
         Candidate: "Candidate Name",
-        QueryId: 1,
+        Id: bson.NewObjectId(),
         Comments: Comments {
             CommentModel { Content: "db Content", Interviewer: "interviewer 0", InterviewerId: "0" },
             CommentModel { Content: "db Content", Interviewer: "interviewer 1", InterviewerId: "1" },

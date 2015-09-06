@@ -2,10 +2,10 @@ package converter
 
 import (
     "encoding/json"
+    "gopkg.in/mgo.v2/bson"
     "interview/contract/v1"
     "interview/model"
     "io"
-    "strconv"
 )
 
 func DecodeContractFromBodyV1(r io.ReadCloser) (contract.InterviewContractV1, error) {
@@ -33,9 +33,8 @@ func ConvertModelToContractV1 (m model.InterviewModel) (c contract.InterviewCont
     }
 
     // TODO: validate success
-    d := strconv.Itoa(m.QueryId)
     return contract.InterviewContractV1 {
-        Id: d,
+        Id: m.Id.Hex(),
         Candidate: m.Candidate,
         Comments: comments,
     }
@@ -55,10 +54,9 @@ func ConvertContractToModelV1 (c contract.InterviewContractV1) (m model.Intervie
     }
 
     // TODO: validate success
-    a, _:= strconv.Atoi(c.Id)
-
+    oid := bson.ObjectId(c.Id)
     return model.InterviewModel {
-        QueryId: a,
+        Id: oid,
         Candidate: c.Candidate,
         Comments: comments,
     }

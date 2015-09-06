@@ -2,7 +2,6 @@ package repository
 
 import (
     "errors"
-    "fmt"
     "gopkg.in/mgo.v2"
     "gopkg.in/mgo.v2/bson"
     "interview/model"
@@ -58,27 +57,8 @@ func(r *DBInterviewRepository) SaveInterview(m model.InterviewModel) (error) {
         return err
     }
 
-    col := r.DBSession.DB("interview").C("seed")
-    // TODO: get next id
-    // get the seed value from the seed database and increment it and update it
-    s := model.Seed{}
-    err := col.Find(bson.M{"increment":"true"}).One(&s)
-
-    if err != nil {
-        return err
-    }
-
-    fmt.Printf("increment %v \n", s)
-    m.QueryId = s.Val
-
-    err = col.Update(bson.M{"increment":"true"}, bson.M{"$inc": bson.M{"val": 1}})
-    if err != nil {
-        return err
-    }
-
     // Insert new interview
-    err = r.DBSession.DB("interview").C("interviews").Insert(&m)
-    if err != nil {
+    if err := r.DBSession.DB("interview").C("interviews").Insert(&m); err != nil {
         return err
     }
 
@@ -98,7 +78,7 @@ func(r *DBInterviewRepository) GetInterview(id string, name string) (model.Inter
 
     // TODO: find by candidate name
     m = model.InterviewModel{}
-    err := r.DBSession.DB("interview").C("interviews").Find(bson.M{"queryid": id}).One(&m)
+    err := r.DBSession.DB("interview").C("interviews").FindId(bson.ObjectIdHex(id)).One(&m)
 
     if err != nil {
         return m, err
