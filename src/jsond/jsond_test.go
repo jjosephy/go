@@ -2,6 +2,8 @@ package jsond
 
 import (
     "encoding/json"
+    "math/rand"
+    "reflect"
     "testing"
 )
 
@@ -9,6 +11,24 @@ const SIMPLE_JSON = `{"strings":["stringerOne","stringerTwo","stringerThree"]}`
 type SimpleJson struct {
     N string `json:"name"`
     S []string `json:"strings"`
+}
+
+type ComplexJson struct {
+    Map map[string]interface{}
+    Slice [][]string
+    SimpleSlice []SimpleJson
+    Simple SimpleJson
+    Floats []float64
+}
+
+var letterRunes = []rune("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ")
+
+func RandStringRunes(n int) string {
+    b := make([]rune, n)
+    for i := range b {
+        b[i] = letterRunes[rand.Intn(len(letterRunes))]
+    }
+    return string(b)
 }
 
 func AssertIsTrue(t *testing.T, c bool, msg string, e interface{}) {
@@ -19,6 +39,80 @@ func AssertIsTrue(t *testing.T, c bool, msg string, e interface{}) {
             t.Fatalf("Error Msg: %s", msg)
         }
     }
+}
+
+func CreateFloatSlice() []float64 {
+    f := make([]float64, 5)
+    for t := range f {
+        f[t] = rand.Float64()
+    }
+
+    return f
+}
+
+func CreateSimpleSlice() []SimpleJson {
+    x := 5
+    slice := make([]SimpleJson, x)
+    for t := range slice {
+        slice[t].S = []string{RandStringRunes(5), RandStringRunes(15), RandStringRunes(9), RandStringRunes(8)}
+        slice[t].N = RandStringRunes(9)
+    }
+
+    return slice
+}
+
+func CreateMap() ( map[string]interface{} ){
+    var m map[string] interface{}
+
+    m = make(map[string] interface{})
+    m["string"] = "zero"
+    m["int"] = 0
+    m["simple"] = SimpleJson {
+        S: []string{ RandStringRunes(5), RandStringRunes(15), RandStringRunes(9), RandStringRunes(8) },
+        N: RandStringRunes(5),
+    }
+
+    return m
+}
+
+func Test_Success_CreateComplexJsonNode(t *testing.T) {
+    i := 10
+    slice := make([][]string, i)
+
+    for x := range slice {
+        slice[x] = make([]string, i)
+        for j := range slice[x] {
+            slice[x][j] = RandStringRunes(5)
+        }
+    }
+
+    sa := []string{"and", "boy", "cat", "dog"}
+    c := ComplexJson {
+        Slice: slice,
+        Simple: SimpleJson {
+            "name",
+            sa,
+        },
+        SimpleSlice: CreateSimpleSlice(),
+        Map: CreateMap(),
+        Floats: CreateFloatSlice(),
+    }
+
+    o, e := json.Marshal(c)
+    AssertIsTrue(t, e == nil, "Error trying to marshal SimpleJson", e)
+
+    jRoot, e := Parse(string(o))
+    AssertIsTrue(t, e == nil, "Error trying to parse json string", e)
+
+    propN := jRoot.Property("Map")
+    AssertIsTrue(t, propN.Value() != nil, "JsonNode Map has no value", nil)
+
+    propM := propN.Property("simple")
+    AssertIsTrue(t, propN.Value() != nil, "JsonNode strings has no value", nil)
+
+    propS := propM.Property("strings")
+    k := getKind(propS.Value())
+    AssertIsTrue(t, k == reflect.Slice, "propS slice is not well formed", nil)
 }
 
 func Test_Success_CreateJsonNode(t *testing.T) {
