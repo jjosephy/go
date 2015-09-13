@@ -10,7 +10,7 @@ import (
 // Interview Repository Interface //
 type InterviewRepository interface {
     GetInterview(id string, name string) (model.InterviewModel, error)
-    SaveInterview(model model.InterviewModel) (error)
+    SaveInterview(model model.InterviewModel) (model.InterviewModel, error)
 }
 
 // DBInterviewRespository Implementation //
@@ -29,20 +29,24 @@ func (r *DBInterviewRepository) CheckConnection()(error) {
         return nil
     }
 
+    // TODO: there is a bug here when session is closed we never reopen it. Need Retry
     r.DBSession, err = mgo.Dial(r.Uri)
     if err != nil {
         return err
     }
 
+    // TODO: Unique index on _id
+    /*
     r.DBSession.SetMode(mgo.Monotonic, true)
     index := mgo.Index{
-		Key:        []string{"queryid"},
+		Key:        []string{"_id"},
 		Unique:     true,
 		DropDups:   false,
 		Background: true,
 		Sparse:     true,
 	}
 	err = r.DBSession.DB("interview").C("interviews").EnsureIndex(index)
+    */
 
     if err != nil {
         defer r.DBSession.Close()
@@ -52,17 +56,17 @@ func (r *DBInterviewRepository) CheckConnection()(error) {
     return  nil
 }
 
-func(r *DBInterviewRepository) SaveInterview(m model.InterviewModel) (error) {
+func(r *DBInterviewRepository) SaveInterview(m model.InterviewModel) (model.InterviewModel, error) {
     if err := r.CheckConnection(); err != nil {
-        return err
+        return m, err
     }
 
-    // Insert new interview
+    m.Id = bson.NewObjectId()
     if err := r.DBSession.DB("interview").C("interviews").Insert(&m); err != nil {
-        return err
+        return m, err
     }
 
-    return nil
+    return m, nil
 }
 
 func(r *DBInterviewRepository) GetInterview(id string, name string) (model.InterviewModel, error) {
@@ -76,9 +80,14 @@ func(r *DBInterviewRepository) GetInterview(id string, name string) (model.Inter
         return m, errors.New("invalid search params provided")
     }
 
+    if valid := bson.IsObjectIdHex(id); valid == false {
+        return m, errors.New("HexId")
+    }
+
     // TODO: find by candidate name
     m = model.InterviewModel{}
-    err := r.DBSession.DB("interview").C("interviews").FindId(bson.ObjectIdHex(id)).One(&m)
+    bid := bson.ObjectIdHex(id)
+    err := r.DBSession.DB("interview").C("interviews").FindId(bid).One(&m)
 
     if err != nil {
         return m, err

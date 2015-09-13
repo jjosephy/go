@@ -62,6 +62,8 @@ func InterviewHandler(data repository.InterviewRepository) http.HandlerFunc {
                       case "not found":
                           httperror.InterviewNotFound(w)
                           return
+                      case "HexId":
+                          httperror.InvalidInterviewId(w)
                       default:
                           httperror.GetInterviewFailed(w, err)
                           return
@@ -77,9 +79,7 @@ func InterviewHandler(data repository.InterviewRepository) http.HandlerFunc {
               }
 
           case "POST":
-              // check version
               // check to see if body is null
-
               var m model.InterviewModel
               switch version {
                   case 1.0:
@@ -95,11 +95,13 @@ func InterviewHandler(data repository.InterviewRepository) http.HandlerFunc {
               }
 
               // TODO: this is by value, try by ref
-              err := data.SaveInterview(m)
+              m, err := data.SaveInterview(m)
               if err != nil {
                   httperror.SaveInterviewFailed(w, err)
                   return
               }
+
+              json.NewEncoder(w).Encode(converter.ConvertModelToContractV1(m))
 
           default:
               w.WriteHeader(http.StatusMethodNotAllowed)

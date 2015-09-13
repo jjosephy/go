@@ -15,6 +15,7 @@ const MSG_GET_INTERVIEW_ERROR               = "Error occurred tyring to Get inte
 const MSG_SAVE_INTERVIEW_ERROR              = "Error occurred trying to Save the interview"
 const MSG_FAILED_READING_BODY               = "Failed to parse the request body"
 const MSG_INTERVIEW_NOTFOUND                = "Interview not found"
+const MSG_INTERVIEW_INVALIDID               = "Invalid Interview Id"
 
 // 400 Errors
 const BADREQUEST_NOINPUTPARAMETERS                  = 3000
@@ -22,6 +23,7 @@ const BADREQUEST_NOVERSION                          = 3001
 const BADREQUEST_INVALIDVERSION                     = 3002
 const BADREQUEST_UNSUPPORTEDVERSION                 = 3003
 const BADREQUEST_FAILED_DECODING_REQUEST_BODY       = 3004
+const BADREQUEST_INTERVIEW_INVALIDID                = 3005
 
 // 404 Errors
 const NOTFOUND_INTERVIEW_NOTFOUND                   = 4000
@@ -47,6 +49,11 @@ func SaveInterviewFailed(w http.ResponseWriter, e error) {
 func InterviewNotFound(w http.ResponseWriter) {
     w.WriteHeader(http.StatusNotFound);
     json.NewEncoder(w).Encode(model.ErrorModel { ErrorCode: NOTFOUND_INTERVIEW_NOTFOUND, Message: MSG_INTERVIEW_NOTFOUND })
+}
+
+func InvalidInterviewId(w http.ResponseWriter) {
+    w.WriteHeader(http.StatusNotFound);
+    json.NewEncoder(w).Encode(model.ErrorModel { ErrorCode: BADREQUEST_INTERVIEW_INVALIDID, Message: MSG_INTERVIEW_INVALIDID })
 }
 
 func NoVersionProvided(w http.ResponseWriter) {

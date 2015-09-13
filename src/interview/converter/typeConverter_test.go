@@ -23,9 +23,9 @@ func CreateTestModel() (model.InterviewModel) {
         Candidate: "Candidate Name",
         Id: bson.NewObjectId(),
         Comments: model.Comments {
-            model.CommentModel { Content: "db Content", Interviewer: "interviewer 0", InterviewerId: "0" },
-            model.CommentModel { Content: "db Content", Interviewer: "interviewer 1", InterviewerId: "1" },
-            model.CommentModel { Content: "db Content", Interviewer: "interviewer 2", InterviewerId: "2" },
+            model.CommentModel { Content: "db Content", Interviewer: "interviewer 0" },
+            model.CommentModel { Content: "db Content", Interviewer: "interviewer 1" },
+            model.CommentModel { Content: "db Content", Interviewer: "interviewer 2" },
         },
     }
 }
@@ -35,9 +35,9 @@ func Test_Success_DecodeContractFromBodyV1(t *testing.T) {
         Candidate: "Candidate",
         Id: "2",
         Comments: contract.CommentsV1 {
-            contract.CommentContractV1 { Content: "db Content", Interviewer: "interviewer 0", InterviewerId: "0" },
-            contract.CommentContractV1 { Content: "db Content", Interviewer: "interviewer 1", InterviewerId: "1" },
-            contract.CommentContractV1 { Content: "db Content", Interviewer: "interviewer 2", InterviewerId: "2" },
+            contract.CommentContractV1 { Content: "db Content", Interviewer: "interviewer 0", },
+            contract.CommentContractV1 { Content: "db Content", Interviewer: "interviewer 1", },
+            contract.CommentContractV1 { Content: "db Content", Interviewer: "interviewer 2", },
         },
     }
 

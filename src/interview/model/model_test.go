@@ -19,13 +19,14 @@ func Test_Success_CreateErrorModel(t *testing.T) {
 
 func Test_Success_SerializeCommentModel(t *testing.T) {
     // Get a model and translate that
+    //TODO: make a helper class to create test models and contracts
     m := InterviewModel {
         Candidate: "Candidate Name",
         Id: bson.NewObjectId(),
         Comments: Comments {
-            CommentModel { Content: "db Content", Interviewer: "interviewer 0", InterviewerId: "0" },
-            CommentModel { Content: "db Content", Interviewer: "interviewer 1", InterviewerId: "1" },
-            CommentModel { Content: "db Content", Interviewer: "interviewer 2", InterviewerId: "2" },
+            CommentModel { Content: "db Content", Interviewer: "interviewer 0" },
+            CommentModel { Content: "db Content", Interviewer: "interviewer 1" },
+            CommentModel { Content: "db Content", Interviewer: "interviewer 2" },
         },
     }
 

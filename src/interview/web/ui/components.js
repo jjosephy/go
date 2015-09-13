@@ -36,8 +36,36 @@ var NewForm = React.createClass({
     render: function() {
         return (
             <div>
-                New
-                <input type="text"/>
+                <div>Candidate Name</div>
+                <input type="text" className="iText" ref="cname"/>
+                <div className="interviewers">
+                    <span className="lInterview">Interviewers</span>
+                </div>
+                <div>
+                    &nbsp;
+                </div>
+                <div>
+                    <div className="addlabel">
+                        <label>Interviewer One</label>
+                        <input type="text" className="iText" ref="ic1" />
+                    </div>
+                    <div className="addlabel">
+                        <label>Interviewer Two</label>
+                        <input type="text" className="iText" ref="ic2" />
+                    </div>
+                    <div className="addlabel">
+                        <label>Interviewer Three</label>
+                        <input type="text" className="iText" ref="ic3" />
+                    </div>
+                    <div className="addlabel">
+                        <label>Interviewer Four</label>
+                        <input type="text" className="iText" ref="ic4" />
+                    </div>
+                    <div className="addlabel">
+                        <label>Interviewer Five</label>
+                        <input type="text" className="iText" ref="ic5" />
+                    </div>
+                </div>
             </div>
         );
     }
@@ -76,10 +104,76 @@ var Dialog = React.createClass({
             showDialog: false,
             contentType: 'none',
             title: 'title',
-            buttonText: 'Save'
+            buttonText: 'Save',
         };
     },
-    handleClick : function(e) {
+    saveInterview : function() {
+        var cname = this.refs.body.refs.cname.getDOMNode().value;
+        if (!cname || cname.trim().length == 0) {
+            alert('Must provide candidate name');
+            return;
+        }
+
+        var i = {
+            candidate: 'candidate name',
+            complete: false,
+            comments: new Array(),
+        };
+
+        var isEmpty = true;
+        for (var x = 1; x < 6; x++) {
+            var z = 'ic' + x.toString();
+            var n = this.refs.body.refs[z].getDOMNode().value;
+            if (n && n.length > 0) {
+                isEmpty = false;
+                var c = {
+                    content: '',
+                    interviewer: n
+                };
+                i.comments.push(c);
+            }
+        }
+
+        if (isEmpty) {
+            alert('Need to supply at least one interviewer.')
+            return;
+        }
+
+        Client.SaveInterview(
+            i,
+            function(data, textStatus, jqXHR) {
+                var res = JSON.parse(jqXHR.responseText);
+                document.getElementById('footer').innerText = 'Interview ' + res.id + ' saved successfully';
+            },
+            function (jqXHR, textStatus, errorThrown) {
+                var res = JSON.parse(jqXHR.responseText);
+                var msg = "Error Code: " + res.ErrorCode + " Message: " + res.Message;
+                console.log(msg);
+                document.getElementById('footer').innerText = msg;
+            }
+        );
+    },
+    handleSave : function(e) {
+        switch (this.state.contentType) {
+            case 'new':
+                this.saveInterview();
+            case 'edit':
+            case 'find':
+        }
+
+        this.setState({ showDialog: false });
+    },
+    handleCancel : function(e) {
+        switch (this.state.contentType) {
+            case 'new':
+                for (var x = 1; x < 6; x++) {
+                    var i = 'ic' + x.toString();
+                    this.refs.body.refs[i].getDOMNode().value = '';
+                }
+            case 'edit':
+            case 'find':
+        }
+
         this.setState({ showDialog: false });
     },
     render: function() {
@@ -95,16 +189,16 @@ var Dialog = React.createClass({
                                 {(() => {
                                     switch (this.state.contentType) {
                                         case 'none':    return 'none';
-                                        case 'new':     return <NewForm />;
-                                        case 'edit':    return <EditForm />;
-                                        case 'find':    return <FindForm />
+                                        case 'new':     return <NewForm ref="body"/>;
+                                        case 'edit':    return <EditForm ref="body"/>;
+                                        case 'find':    return <FindForm ref="body"/>
                                         default:        return 'empty';
                                     }
                                 })()}
                             </div>
                             <div className="dialogFooter">
-                                <button onClick={this.handleClick} className="dialogButton">{this.state.buttonText}</button>
-                                <button onClick={this.handleClick} className="dialogButton">Cancel</button>
+                                <button onClick={this.handleSave} className="dialogButton">{this.state.buttonText}</button>
+                                <button onClick={this.handleCancel} className="dialogButton">Cancel</button>
                             </div>
                         </div>
                     </div>
@@ -131,8 +225,17 @@ var CommentPanel = React.createClass({
     render: function() {
         return (
             <div className="commentPanel">
-                <textarea>
-                </textarea>
+                <div>Interviewer Name:</div>
+                <div>
+                    <select>
+                        <option>No Hire</option>
+                        <option>Hire</option>
+                    </select>
+                </div>
+                <div>
+                    <textarea className="txt">
+                    </textarea>
+                </div>
             </div>
         );
     }

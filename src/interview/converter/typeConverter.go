@@ -27,8 +27,7 @@ func ConvertModelToContractV1 (m model.InterviewModel) (c contract.InterviewCont
     for i := 0; i < len(m.Comments); i++ {
         cm := contract.CommentContractV1  {
                 Content: m.Comments[i].Content,
-                Interviewer: m.Comments[i].Interviewer,
-                InterviewerId: m.Comments[i].InterviewerId }
+                Interviewer: m.Comments[i].Interviewer }
         comments[i] = cm
     }
 
@@ -48,8 +47,7 @@ func ConvertContractToModelV1 (c contract.InterviewContractV1) (m model.Intervie
     for i := 0; i < len(c.Comments); i++ {
         mc := model.CommentModel  {
                 Content: c.Comments[i].Content,
-                Interviewer: c.Comments[i].Interviewer,
-                InterviewerId: c.Comments[i].InterviewerId }
+                Interviewer: c.Comments[i].Interviewer }
         comments[i] = mc
     }
 

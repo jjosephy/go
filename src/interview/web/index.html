@@ -5,6 +5,7 @@
         <script src="/script/react.js"></script>
         <script src="/script/JSXTransformer.js"></script>
         <script src="/script/jquery-2.1.4.min.js"></script>
+        <script src="/script/client.js"></script>
         <script src="/ui/components.js" type="text/jsx"></script>
         <script type="text/jsx">
             $(document).ready(function() {
@@ -13,16 +14,17 @@
                     document.getElementById('dialog')
                 );
 
-                React.render(
-                    <Header dialog={dialog}/>,
+                var h = React.render(
+                    <Header dialog={dialog} />,
                     document.getElementById('header')
                 );
-                /*
+
+                //h.newHandler();
+
                 React.render(
                     <CommentPanel />,
                     document.getElementById('content')
                 );
-                */
             });
         </script>
     </head>
@@ -30,6 +32,10 @@
         <div id="header">
         </div>
         <div id="content">
+            Create a new Interview of click Find to find an existing interview.
+        </div>
+        <div id="footer">
+            Status
         </div>
         <div id="dialog">
         </div>

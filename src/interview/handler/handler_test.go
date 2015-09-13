@@ -20,8 +20,8 @@ import (
 type MockInterviewRepository struct {
 }
 
-func(r *MockInterviewRepository) SaveInterview(m model.InterviewModel) (error) {
-    return nil
+func(r *MockInterviewRepository) SaveInterview(m model.InterviewModel) (model.InterviewModel, error) {
+    return m, nil
 }
 
 func(r *MockInterviewRepository) GetInterview(id string, name string) (model.InterviewModel, error) {
@@ -32,9 +32,9 @@ func(r *MockInterviewRepository) GetInterview(id string, name string) (model.Int
     }
 
     comments := model.Comments {
-        model.CommentModel { Content: "db Content", Interviewer: "interviewer 0", InterviewerId: "0" },
-        model.CommentModel { Content: "db Content", Interviewer: "interviewer 1", InterviewerId: "1" },
-        model.CommentModel { Content: "db Content", Interviewer: "interviewer 2", InterviewerId: "2" },
+        model.CommentModel { Content: "db Content", Interviewer: "interviewer 0" },
+        model.CommentModel { Content: "db Content", Interviewer: "interviewer 1" },
+        model.CommentModel { Content: "db Content", Interviewer: "interviewer 2" },
     }
 
     // Get a model and translate that
@@ -242,9 +242,9 @@ func Test_Success_PostValidRequest_V1(t *testing.T) {
         Id: "Id",
         Candidate: "Candidate",
         Comments: contract.CommentsV1 {
-            contract.CommentContractV1 { Content: "Mock Comment", Interviewer: "interviewer 0", InterviewerId: "0" },
-            contract.CommentContractV1 { Content: "Mock Comment", Interviewer: "interviewer 1", InterviewerId: "1" },
-            contract.CommentContractV1 { Content: "Mock Comment", Interviewer: "interviewer 2", InterviewerId: "2" },
+            contract.CommentContractV1 { Content: "Mock Comment", Interviewer: "interviewer 0" },
+            contract.CommentContractV1 { Content: "Mock Comment", Interviewer: "interviewer 1" },
+            contract.CommentContractV1 { Content: "Mock Comment", Interviewer: "interviewer 2" },
         },
     }
 
