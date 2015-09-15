@@ -15,3 +15,15 @@ Client.SaveInterview = function(i, success, error) {
         error: error,
     });
 }
+
+Client.GetInterview = function(id, cname, success, error) {
+    $.ajax({
+        url : 'http://localhost:8080/interview?id=' + id,
+        type: 'GET',
+        headers: {
+            "Api-Version":  1.0
+        },
+        success: success,
+        error: error,
+    });
+}

@@ -12,7 +12,7 @@ func main() {
     mux := http.NewServeMux()
 
     // TODO: figure out path and a better way to configure
-    mux.Handle("/", http.FileServer(http.Dir("../src/interview/web/")))
+    mux.Handle("/", http.FileServer(http.Dir("/home/jjosephy/Source/go/src/interview/web")))
 
     // TODO: figure out injection pattern and config
     repo := repository.DBInterviewRepository{ Uri: "mongodb://localhost" }

@@ -88,10 +88,14 @@ var FindForm = React.createClass({
     render: function() {
         return (
             <div>
-                <label className="dialogLabel">Id</label>
-                <input type="text" className="textBox"/>
-                <label className="dialogLabel">Candidate Name</label>
-                <input type="text" className="textBox"/>
+                <div className="addlabel">
+                    <label>Interviewer Id</label>
+                    <input type="text" className="iText" ref="ic1" />
+                </div>
+                <div className="addlabel">
+                    <label>Candidate Name</label>
+                    <input type="text" className="iText" ref="ic2" />
+                </div>
             </div>
         );
     }
@@ -111,7 +115,7 @@ var Dialog = React.createClass({
         var cname = this.refs.body.refs.cname.getDOMNode().value;
         if (!cname || cname.trim().length == 0) {
             alert('Must provide candidate name');
-            return;
+            return false;
         }
 
         var i = {
@@ -136,13 +140,24 @@ var Dialog = React.createClass({
 
         if (isEmpty) {
             alert('Need to supply at least one interviewer.')
-            return;
+            return false;
         }
 
         Client.SaveInterview(
             i,
             function(data, textStatus, jqXHR) {
                 var res = JSON.parse(jqXHR.responseText);
+                React.render(
+                    <div>
+                        <div> Candidate Name: {res.candidate}</div>
+                        {
+                            res.comments.map(function(c) {
+                                return <CommentPanel body={c}></CommentPanel>
+                            })
+                        }
+                    </div>,
+                    document.getElementById('content')
+                );
                 document.getElementById('footer').innerText = 'Interview ' + res.id + ' saved successfully';
             },
             function (jqXHR, textStatus, errorThrown) {
@@ -152,16 +167,59 @@ var Dialog = React.createClass({
                 document.getElementById('footer').innerText = msg;
             }
         );
+
+        return true;
+    },
+    getInterview() {
+        var id = this.refs.body.refs.ic1.getDOMNode().value;
+        Client.GetInterview(
+            id,
+            '',
+            function(data, textStatus, jqXHR) {
+                var res = JSON.parse(jqXHR.responseText);
+                React.render(
+                    <div>
+                        <div> Candidate Name: {res.candidate}</div>
+                        {
+                            res.comments.map(function(c) {
+                                return <CommentPanel body={c}></CommentPanel>
+                            })
+                        }
+                    </div>,
+                    document.getElementById('content')
+                );
+                document.getElementById('footer').innerText = 'Interview ' + id + ' retrieved successfully';
+            },
+            function (jqXHR, textStatus, errorThrown) {
+                var res = JSON.parse(jqXHR.responseText);
+                var msg = "Error Code: " + res.ErrorCode + " Message: " + res.Message;
+                console.log(msg);
+                document.getElementById('footer').innerText = msg;
+                React.render(
+                    <div>
+                        No Content
+                    </div>,
+                    document.getElementById('content')
+                );
+            }
+        );
     },
     handleSave : function(e) {
+        var success = false;
         switch (this.state.contentType) {
             case 'new':
-                this.saveInterview();
+                success = this.saveInterview();
+                break;
             case 'edit':
             case 'find':
+                this.getInterview();
+                success = true;
+                break;
         }
 
-        this.setState({ showDialog: false });
+        if (success === true) {
+            this.setState({ showDialog: false });
+        }
     },
     handleCancel : function(e) {
         switch (this.state.contentType) {
@@ -225,17 +283,18 @@ var CommentPanel = React.createClass({
     render: function() {
         return (
             <div className="commentPanel">
-                <div>Interviewer Name:</div>
+                <div className="cpLabel">Interviewer Name: {this.props.body.interviewer}</div>
                 <div>
+                    <textarea className="txt">
+                    </textarea>
+                </div>
+                <div className="select">
                     <select>
                         <option>No Hire</option>
                         <option>Hire</option>
                     </select>
                 </div>
-                <div>
-                    <textarea className="txt">
-                    </textarea>
-                </div>
+                <hr/>
             </div>
         );
     }

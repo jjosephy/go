@@ -64,6 +64,7 @@ func InterviewHandler(data repository.InterviewRepository) http.HandlerFunc {
                           return
                       case "HexId":
                           httperror.InvalidInterviewId(w)
+                          return
                       default:
                           httperror.GetInterviewFailed(w, err)
                           return

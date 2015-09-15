@@ -24,6 +24,7 @@ body {
     font-size: 1.6em;
     padding-top: 5px;
     padding-left: 5px;
+    overflow: scroll;
 }
 
 #footer {
@@ -127,7 +128,8 @@ body {
 }
 
 .txt {
-    width: 765px;
+    width: 99%;
+    max-width: 99%;
     height: 200px;
 }
 
@@ -137,4 +139,19 @@ body {
 
 .addlabel {
     margin-top: 15px;
+}
+
+.select {
+    margin-top: 5px;
+}
+
+.cpLabel {
+    font-size: .8em;
+}
+
+select {
+    width: 200px;
+    border: 1px solid #cccccc;
+    height: 25px;
+    background-color: white;
 }
