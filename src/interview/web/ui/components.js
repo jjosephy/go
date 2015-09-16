@@ -203,6 +203,11 @@ var Dialog = React.createClass({
                 );
             }
         );
+
+        React.render(
+            <LoadingPanel />,
+            document.getElementById('content')
+        );
     },
     handleSave : function(e) {
         var success = false;
@@ -295,6 +300,17 @@ var CommentPanel = React.createClass({
                     </select>
                 </div>
                 <hr/>
+            </div>
+        );
+    }
+});
+
+// Loading Panel //
+var LoadingPanel = React.createClass({
+    render: function() {
+        return (
+            <div className="loading">
+                <img src="images/loading.gif" />
             </div>
         );
     }

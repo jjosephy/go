@@ -5,6 +5,7 @@ import (
     "gopkg.in/mgo.v2"
     "gopkg.in/mgo.v2/bson"
     "interview/model"
+    "time"
 )
 
 // Interview Repository Interface //
@@ -30,7 +31,8 @@ func (r *DBInterviewRepository) CheckConnection()(error) {
     }
 
     // TODO: there is a bug here when session is closed we never reopen it. Need Retry
-    r.DBSession, err = mgo.Dial(r.Uri)
+    timeout := 10 * time.Second
+    r.DBSession, err = mgo.DialWithTimeout(r.Uri, timeout)
     if err != nil {
         return err
     }

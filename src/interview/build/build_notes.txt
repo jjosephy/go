@@ -35,4 +35,4 @@ Debugging:
 
 mongodb
 
-mongod --dbpath <path to data directory>
+mongod --dbpath /home/jjosephy/mongodb/data/db

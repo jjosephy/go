@@ -24,7 +24,7 @@ body {
     font-size: 1.6em;
     padding-top: 5px;
     padding-left: 5px;
-    overflow: scroll;
+    overflow-y: scroll;
 }
 
 #footer {
@@ -154,4 +154,13 @@ select {
     border: 1px solid #cccccc;
     height: 25px;
     background-color: white;
+}
+
+.loading {
+    width:50%;
+    height:50%;
+    position:absolute;
+    left:50%;
+    top:30%;
+    margin:-100px 0 0 -150px;
 }
