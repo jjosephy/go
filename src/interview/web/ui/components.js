@@ -119,7 +119,7 @@ var Dialog = React.createClass({
         }
 
         var i = {
-            candidate: 'candidate name',
+            candidate: cname,
             complete: false,
             comments: new Array(),
         };
@@ -143,6 +143,7 @@ var Dialog = React.createClass({
             return false;
         }
 
+        var that = this;
         Client.SaveInterview(
             i,
             function(data, textStatus, jqXHR) {
@@ -165,13 +166,29 @@ var Dialog = React.createClass({
                 var msg = "Error Code: " + res.ErrorCode + " Message: " + res.Message;
                 console.log(msg);
                 document.getElementById('footer').innerText = msg;
+                that.showErrorContent(res);
             }
         );
-
+        this.showLoadingPanel();
         return true;
+    },
+    showLoadingPanel() {
+        React.render(
+            <LoadingPanel />,
+            document.getElementById('content')
+        );
+    },
+    showErrorContent(res) {
+        React.render(
+            <div>
+                {res.Message}
+            </div>,
+            document.getElementById('content')
+        );
     },
     getInterview() {
         var id = this.refs.body.refs.ic1.getDOMNode().value;
+        var that = this;
         Client.GetInterview(
             id,
             '',
@@ -195,19 +212,10 @@ var Dialog = React.createClass({
                 var msg = "Error Code: " + res.ErrorCode + " Message: " + res.Message;
                 console.log(msg);
                 document.getElementById('footer').innerText = msg;
-                React.render(
-                    <div>
-                        No Content
-                    </div>,
-                    document.getElementById('content')
-                );
+                that.showErrorContent(res);
             }
         );
-
-        React.render(
-            <LoadingPanel />,
-            document.getElementById('content')
-        );
+        this.showLoadingPanel();
     },
     handleSave : function(e) {
         var success = false;
@@ -293,11 +301,12 @@ var CommentPanel = React.createClass({
                     <textarea className="txt">
                     </textarea>
                 </div>
-                <div className="select">
-                    <select>
+                <div className="select"><select>
                         <option>No Hire</option>
                         <option>Hire</option>
                     </select>
+
+                    <button className="buttonRight">Update Comments</button>
                 </div>
                 <hr/>
             </div>

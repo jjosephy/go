@@ -5,7 +5,7 @@ body {
 }
 
 #header {
-    background-color: black;
+    background-color: #16162B;
     width: 100% - 35px;
     height: 35px;
     padding-left: 15px;
@@ -30,7 +30,7 @@ body {
 #footer {
     padding-top: 10px;
     padding-left: 10px;
-    background-color: black;
+    background-color: #16162B;
     width: 100% - 35px;
     height: 25px;
     color: white;
@@ -163,4 +163,12 @@ select {
     left:50%;
     top:30%;
     margin:-100px 0 0 -150px;
+}
+
+.buttonRight {
+    background-color: #cccccc;
+    color: #333333;
+    border: 1px solid black;
+    height: 25px;
+    margin-left: 5px;
 }
