@@ -319,7 +319,7 @@ var LoadingPanel = React.createClass({
     render: function() {
         return (
             <div className="loading">
-                <img src="images/loading.gif" />
+                <img src="images/loading.gif" />             
             </div>
         );
     }
