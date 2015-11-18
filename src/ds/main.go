@@ -1,10 +1,16 @@
 package main
 
 import (
-    "fmt"
+    "ds/directedGraph"
 )
 
 func main() {
 
-    fmt.Println("test this")
+    g := DirectedGraph {}
+
+    g.Initialize(5)
+    g.AddEdge(0, 1)
+    g.AddEdge(1, 2)
+
+    g.DFS()
 }
