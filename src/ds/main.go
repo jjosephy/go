@@ -1,7 +1,7 @@
 package main
 
 import (
-    "ds/directedGraph"
+    "graph"
 )
 
 func main() {

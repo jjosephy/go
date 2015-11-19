@@ -1,9 +1,8 @@
-package directedGraph
+package graph
 
 import (
     "container/list"
     "errors"
-    "fmt"
 )
 
 type DirectedGraph struct {
@@ -13,15 +12,22 @@ type DirectedGraph struct {
     Vertices int
 }
 
-func (g *DirectedGraph) Initialize(size int) {
+func (g *DirectedGraph) Initialize(size int) (error) {
+    if size < 0 {
+        return errors.New("invalid size")
+    }
+
     g.graph = make([]list.List, size, size)
     g.Vertices = size
+
+    return nil
 }
 
 func (g *DirectedGraph) Adjacent(x int) (list.List, error) {
     var l list.List
-    if x < 0 || x >= g.Vertices {
-        return l, errors.New("Invalid Node")
+
+    if e := g.validateNode(x); e != nil {
+        return l, e
     }
 
     return g.graph[x], nil
@@ -38,18 +44,10 @@ func (g *DirectedGraph) AddEdge(x int, y int) (error){
     return nil
 }
 
-func (g *DirectedGraph) DFS() {
-    marked := make([]bool, g.Vertices, g.Vertices)
-    g.dfs_int(marked, 0)
-}
-
-func (g *DirectedGraph) dfs_int(marked []bool, x int) {
-    n, err := g.Adjacent(x)
-
-    if err != nil {
-        fmt.Print("invalid node")
-        return
+func (g *DirectedGraph) validateNode(x int) (error) {
+    if x >= g.Vertices || x < 0 {
+        return errors.New("invalid")
     }
 
-    fmt.Printf("%v\n", n)
+    return nil
 }

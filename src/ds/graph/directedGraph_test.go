@@ -1,36 +1,29 @@
-package directedGraph
+package graph
 
 import (
-    "fmt"
     "testing"
 )
 
-func Test_DirectedGraph(t *testing.T) {
-    t.Log("Testing Directed Graph")
+func Test_DirectedGraph_Fail_InvalidInitializer(t *testing.T) {
     g := DirectedGraph {}
+    e := g.Initialize(-1)
 
-    g.Initialize(5)
+    if e == nil {
+        t.Error("No Error returned from Initialize")
+    }
+
+    t.Log(e)
+}
+
+func Test_DirectedGraph_Success_ValidInitializer(t *testing.T) {
+    g := DirectedGraph {}
+    e := g.Initialize(5)
+
+    if e != nil {
+        t.Error("Error returned from Initialize")
+    }
     g.AddEdge(0, 1)
     g.AddEdge(1, 2)
 
-    dfs(&g)
-}
-
-
-func dfs(g *DirectedGraph) {
-    marked := make([]bool, g.Vertices, g.Vertices)
-    dfs_int(g, marked, 0)
-}
-
-func dfs_int(g *DirectedGraph, marked []bool, x int) {
-    n, err := g.Adjacent(x)
-
-    if err != nil {
-        fmt.Print("invalid node")
-        return
-    }
-
-    fmt.Printf("%v\n", n)
-
-
+    //dfs(&g)
 }
