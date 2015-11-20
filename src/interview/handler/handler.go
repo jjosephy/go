@@ -8,8 +8,6 @@ import (
     "interview/model"
     "net/http"
     "strconv"
-
-    //"fmt"
 )
 
 func InterviewHandler(data repository.InterviewRepository) http.HandlerFunc {
@@ -94,8 +92,7 @@ func InterviewHandler(data repository.InterviewRepository) http.HandlerFunc {
                       httperror.UnsupportedVersion(w)
                       return;
               }
-
-              // TODO: this is by value, try by ref
+              
               m, err := data.SaveInterview(m)
               if err != nil {
                   httperror.SaveInterviewFailed(w, err)
