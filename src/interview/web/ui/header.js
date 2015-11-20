@@ -4,7 +4,7 @@ var Header = React.createClass({displayName: 'Header',
         this.setDialog('new', 'Create New Interview', 'Save');
     },
     editHandler : function(e) {
-        this.setDialog('edit', 'Edit Interview', 'Save');
+        this.setDialog('edit', 'Edit Interview', 'Find');
     },
     findHandler : function(e) {
         this.setDialog('find', 'Find Interview', 'Go');

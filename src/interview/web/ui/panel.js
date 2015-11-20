@@ -31,3 +31,16 @@ var LoadingPanel = React.createClass({
         );
     }
 });
+
+var EditPanel = React.createClass({
+    render: function() {
+        return (
+            <div className="commentPanel">
+                <div className="cpLabel">Interviewer Name:</div>
+                <div>
+                    <input type="text" className="editText" value={this.props.body.interviewer} />
+                </div>
+            </div>
+        );
+    }
+});

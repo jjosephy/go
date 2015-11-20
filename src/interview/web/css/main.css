@@ -137,6 +137,10 @@ body {
     width: 765px;
 }
 
+.editText {
+    width: 300;
+}
+
 .addlabel {
     margin-top: 15px;
 }

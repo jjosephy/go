@@ -75,12 +75,6 @@ var Dialog = React.createClass({
             document.getElementById('content')
         );
     },
-    showDialogLoadingPanel() {
-        React.render(
-            <LoadingPanel />,
-            document.getElementById('dialog')
-        );
-    },
     showErrorContent(res) {
         React.render(
             <div>
@@ -118,7 +112,7 @@ var Dialog = React.createClass({
                 that.showErrorContent(res);
             }
         );
-        this.showDialogLoadingPanel();
+        this.showLoadingPanel();
     },
     editInterview() {
         var id = this.refs.body.refs.ic1.getDOMNode().value;
@@ -133,7 +127,7 @@ var Dialog = React.createClass({
                         <div> Candidate Name: {res.candidate}</div>
                         {
                             res.comments.map(function(c) {
-                                return <CommentPanel body={c}></CommentPanel>
+                                return <EditPanel body={c}></EditPanel>
                             })
                         }
                     </div>,
