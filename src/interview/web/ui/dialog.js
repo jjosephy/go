@@ -75,6 +75,12 @@ var Dialog = React.createClass({
             document.getElementById('content')
         );
     },
+    showDialogLoadingPanel() {
+        React.render(
+            <LoadingPanel />,
+            document.getElementById('dialog')
+        );
+    },
     showErrorContent(res) {
         React.render(
             <div>
@@ -112,6 +118,37 @@ var Dialog = React.createClass({
                 that.showErrorContent(res);
             }
         );
+        this.showDialogLoadingPanel();
+    },
+    editInterview() {
+        var id = this.refs.body.refs.ic1.getDOMNode().value;
+        var that = this;
+        Client.GetInterview(
+            id,
+            '',
+            function(data, textStatus, jqXHR) {
+                var res = JSON.parse(jqXHR.responseText);
+                React.render(
+                    <div>
+                        <div> Candidate Name: {res.candidate}</div>
+                        {
+                            res.comments.map(function(c) {
+                                return <CommentPanel body={c}></CommentPanel>
+                            })
+                        }
+                    </div>,
+                    document.getElementById('content')
+                );
+                document.getElementById('footer').innerText = 'Interview ' + id + ' retrieved successfully';
+            },
+            function (jqXHR, textStatus, errorThrown) {
+                var res = JSON.parse(jqXHR.responseText);
+                var msg = "Error Code: " + res.ErrorCode + " Message: " + res.Message;
+                console.log(msg);
+                document.getElementById('footer').innerText = msg;
+                that.showErrorContent(res);
+            }
+        );
         this.showLoadingPanel();
     },
     handleSave : function(e) {
@@ -121,6 +158,9 @@ var Dialog = React.createClass({
                 success = this.saveInterview();
                 break;
             case 'edit':
+                this.editInterview();
+                success = true;
+                break
             case 'find':
                 this.getInterview();
                 success = true;

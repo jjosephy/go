@@ -43,8 +43,10 @@ var EditForm = React.createClass({
     render: function() {
         return (
             <div>
-                Edit
-                <input type="text"/>
+                <div className="addlabel">
+                    <label>Interviewer Id</label>
+                    <input type="text" className="iText" ref="ic1" />
+                </div>
             </div>
         );
     }
