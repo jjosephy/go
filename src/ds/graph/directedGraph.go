@@ -12,21 +12,26 @@ type DirectedGraph struct {
     Vertices int
 }
 
-func (g *DirectedGraph) Initialize(size int) (error) {
+func NewDirectedGraph(size int) (*DirectedGraph, error) {
+    var g *DirectedGraph
+
     if size < 0 {
-        return errors.New("invalid size")
+        return g, errors.New("invalid size")
     }
 
-    g.graph = make([]list.List, size, size)
-    g.Vertices = size
+    g = &DirectedGraph {
+        graph : make([]list.List, size, size),
+        Vertices: size,
+        Edges: 0,
+    }
 
-    return nil
+    return g, nil
 }
 
 func (g *DirectedGraph) Adjacent(x int) (list.List, error) {
     var l list.List
 
-    if e := g.validateNode(x); e != nil {
+    if v, e := g.isValidNode(x); !v && e != nil {
         return l, e
     }
 
@@ -34,8 +39,15 @@ func (g *DirectedGraph) Adjacent(x int) (list.List, error) {
 }
 
 func (g *DirectedGraph) AddEdge(x int, y int) (error){
-    if x >= g.Vertices || x < 0 || y >= g.Vertices || y < 0 {
-        return errors.New("invalid edge")
+    var v bool
+    var e error
+
+    if v, e = g.isValidNode(x); !v && e != nil {
+        return errors.New("x node is invalid")
+    }
+
+    if v, e = g.isValidNode(y); !v && e != nil {
+        return errors.New("y node is invalid")
     }
 
     g.graph[x].PushBack(y)
@@ -44,10 +56,10 @@ func (g *DirectedGraph) AddEdge(x int, y int) (error){
     return nil
 }
 
-func (g *DirectedGraph) validateNode(x int) (error) {
+func (g *DirectedGraph) isValidNode(x int) (bool, error) {
     if x >= g.Vertices || x < 0 {
-        return errors.New("invalid")
+        return false, errors.New("invalid node")
     }
 
-    return nil
+    return true, nil
 }
