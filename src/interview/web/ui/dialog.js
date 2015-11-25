@@ -130,6 +130,8 @@ var Dialog = React.createClass({
                                 return <EditPanel body={c}></EditPanel>
                             })
                         }
+                        <button className="editButton">Edit</button>
+                        <button className="editButton">Cancel</button>
                     </div>,
                     document.getElementById('content')
                 );

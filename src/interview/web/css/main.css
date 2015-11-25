@@ -176,3 +176,9 @@ select {
     height: 25px;
     margin-left: 5px;
 }
+
+.editButton {
+    width: 75px;
+    margin-top: 7px;
+    margin-right: 9px;
+}
