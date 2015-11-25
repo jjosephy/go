@@ -38,20 +38,6 @@ var NewForm = React.createClass({
     }
 });
 
-// Edit Form //
-var EditForm = React.createClass({
-    render: function() {
-        return (
-            <div>
-                <div className="addlabel">
-                    <label>Interviewer Id</label>
-                    <input type="text" className="iText" ref="ic1" />
-                </div>
-            </div>
-        );
-    }
-});
-
 // Find Form//
 var FindForm = React.createClass({
     render: function() {

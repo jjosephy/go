@@ -3,9 +3,6 @@ var Header = React.createClass({displayName: 'Header',
     newHandler : function(e) {
         this.setDialog('new', 'Create New Interview', 'Save');
     },
-    editHandler : function(e) {
-        this.setDialog('edit', 'Edit Interview', 'Find');
-    },
     findHandler : function(e) {
         this.setDialog('find', 'Find Interview', 'Go');
     },
@@ -24,7 +21,6 @@ var Header = React.createClass({displayName: 'Header',
         return (
             <div className="header" >
                 <MenuItem label="New" handler={this.newHandler} />
-                <MenuItem label="Edit" handler={this.editHandler} />
                 <MenuItem label="Find" handler={this.findHandler} />
             </div>
         );

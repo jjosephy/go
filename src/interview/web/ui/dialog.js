@@ -114,49 +114,12 @@ var Dialog = React.createClass({
         );
         this.showLoadingPanel();
     },
-    editInterview() {
-        var id = this.refs.body.refs.ic1.getDOMNode().value;
-        var that = this;
-        Client.GetInterview(
-            id,
-            '',
-            function(data, textStatus, jqXHR) {
-                var res = JSON.parse(jqXHR.responseText);
-                React.render(
-                    <div>
-                        <div> Candidate Name: {res.candidate}</div>
-                        {
-                            res.comments.map(function(c) {
-                                return <EditPanel body={c}></EditPanel>
-                            })
-                        }
-                        <button className="editButton">Edit</button>
-                        <button className="editButton">Cancel</button>
-                    </div>,
-                    document.getElementById('content')
-                );
-                document.getElementById('footer').innerText = 'Interview ' + id + ' retrieved successfully';
-            },
-            function (jqXHR, textStatus, errorThrown) {
-                var res = JSON.parse(jqXHR.responseText);
-                var msg = "Error Code: " + res.ErrorCode + " Message: " + res.Message;
-                console.log(msg);
-                document.getElementById('footer').innerText = msg;
-                that.showErrorContent(res);
-            }
-        );
-        this.showLoadingPanel();
-    },
     handleSave : function(e) {
         var success = false;
         switch (this.state.contentType) {
             case 'new':
                 success = this.saveInterview();
                 break;
-            case 'edit':
-                this.editInterview();
-                success = true;
-                break
             case 'find':
                 this.getInterview();
                 success = true;
@@ -174,7 +137,6 @@ var Dialog = React.createClass({
                     var i = 'ic' + x.toString();
                     this.refs.body.refs[i].getDOMNode().value = '';
                 }
-            case 'edit':
             case 'find':
         }
 
@@ -194,7 +156,6 @@ var Dialog = React.createClass({
                                     switch (this.state.contentType) {
                                         case 'none':    return 'none';
                                         case 'new':     return <NewForm ref="body"/>;
-                                        case 'edit':    return <EditForm ref="body"/>;
                                         case 'find':    return <FindForm ref="body"/>
                                         default:        return 'empty';
                                     }

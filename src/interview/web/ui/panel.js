@@ -3,7 +3,10 @@ var CommentPanel = React.createClass({
     render: function() {
         return (
             <div className="commentPanel">
-                <div className="cpLabel">Interviewer Name: {this.props.body.interviewer}</div>
+                <div className="cpLabel">
+                    <label>Interviewer Name:</label>
+                    <input type="text" className="iText" defaultValue={this.props.body.interviewer}/>
+                </div>
                 <div>
                     <textarea className="txt">
                     </textarea>
@@ -12,8 +15,7 @@ var CommentPanel = React.createClass({
                         <option>No Hire</option>
                         <option>Hire</option>
                     </select>
-
-                    <button className="buttonRight">Update Comments</button>
+                    <button className="buttonRight">Save</button>
                 </div>
                 <hr/>
             </div>
@@ -27,19 +29,6 @@ var LoadingPanel = React.createClass({
         return (
             <div className="loading">
                 <img src="images/loading.gif" />
-            </div>
-        );
-    }
-});
-
-var EditPanel = React.createClass({
-    render: function() {
-        return (
-            <div className="commentPanel">
-                <div className="cpLabel">Interviewer Name:</div>
-                <div>
-                    <input type="text" className="editText" value={this.props.body.interviewer} />
-                </div>
             </div>
         );
     }
