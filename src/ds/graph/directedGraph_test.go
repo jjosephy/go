@@ -19,9 +19,27 @@ func Test_DirectedGraph_Fail_InvalidInitializer(t *testing.T) {
 }
 
 func Test_DirectedGraph_Fail_TestInvalidNode(t *testing.T) {
-    //g, e := NewDirectedGraph(5)
+    g, e := NewDirectedGraph(5)
 
+    if e = g.AddEdge(-1, 0); e == nil {
+        t.Errorf("error should not be nil %v", e)
+    }
+    assertIsTrue(t, e.Error() == "x node is invalid", "incorrect error")
 
+    if e = g.AddEdge(5, 0); e == nil {
+        t.Error("error should not be nil")
+    }
+    assertIsTrue(t, e.Error() == "x node is invalid", "incorrect error")
+
+    if e = g.AddEdge(0, -1); e == nil {
+        t.Error("error should not be nil")
+    }
+    assertIsTrue(t, e.Error() == "y node is invalid", "incorrect error")
+
+    if e = g.AddEdge(0, 5); e == nil {
+        t.Error("error should not be nil")
+    }
+    assertIsTrue(t, e.Error() == "y node is invalid", "incorrect error")
 }
 
 func Test_DirectedGraph_Success_ValidInitializer(t *testing.T) {
@@ -40,5 +58,4 @@ func Test_DirectedGraph_Success_ValidInitializer(t *testing.T) {
     }
 
     assertIsTrue(t, g.Edges == 2, "Number of edges dont match")
-    //dfs(&g)
 }
