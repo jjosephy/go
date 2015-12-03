@@ -1,0 +1,1 @@
+ curl --noproxy localhost, -i -k -X POST -d 'uname=adfadsf&pwd=asdfad' https://localhost:8443/token

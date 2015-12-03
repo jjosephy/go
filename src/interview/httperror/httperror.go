@@ -7,15 +7,18 @@ import (
     "net/http"
 )
 
-const MSG_NO_VERSION_PROVIDED               = "No Version Provided"
-const MSG_INVALID_VERSION                   = "Invalid Version Provided"
-const MSG_NO_PARAMETERS_PROVIDED            = "No Parameters Provided"
-const MSG_UNSUPPORTED_VERSION               = "Unsupported Version Provided"
-const MSG_GET_INTERVIEW_ERROR               = "Error occurred tyring to Get interview details"
-const MSG_SAVE_INTERVIEW_ERROR              = "Error occurred trying to Save the interview"
-const MSG_FAILED_READING_BODY               = "Failed to parse the request body"
-const MSG_INTERVIEW_NOTFOUND                = "Interview not found"
-const MSG_INTERVIEW_INVALIDID               = "Invalid Interview Id"
+const (
+    MSG_NO_VERSION_PROVIDED               = "No Version Provided"
+    MSG_INVALID_VERSION                   = "Invalid Version Provided"
+    MSG_NO_PARAMETERS_PROVIDED            = "No Parameters Provided"
+    MSG_UNSUPPORTED_VERSION               = "Unsupported Version Provided"
+    MSG_GET_INTERVIEW_ERROR               = "Error occurred tyring to Get interview details"
+    MSG_SAVE_INTERVIEW_ERROR              = "Error occurred trying to Save the interview"
+    MSG_FAILED_READING_BODY               = "Failed to parse the request body"
+    MSG_INTERVIEW_NOTFOUND                = "Interview not found"
+    MSG_INTERVIEW_INVALIDID               = "Invalid Interview Id"
+    MSG_UNAUTHORIZED                      = "Unauthorized"
+)
 
 // 400 Errors
 const BADREQUEST_NOINPUTPARAMETERS                  = 3000
@@ -28,11 +31,29 @@ const BADREQUEST_INTERVIEW_INVALIDID                = 3005
 // 404 Errors
 const NOTFOUND_INTERVIEW_NOTFOUND                   = 4000
 
+//401 Errors
+const NOAUTHORIZED_LDAPCONNECT_FAILURE             = 6000
+const NOAUTHORIZED_FAILURE                         = 6001
+
 // 500 Errors
 const SERVERERROR_GENERAL                          = 5000
 const SERVERERROR_GET_INTERVIEW_FAILURE            = 5001
 const SERVERERROR_SAVE_INTERVIEW_FAILURE           = 5002
 
+func Unauthorized(w http.ResponseWriter) {
+    w.WriteHeader(http.StatusUnauthorized);
+    json.NewEncoder(w).Encode(model.ErrorModel { ErrorCode: NOAUTHORIZED_FAILURE, Message: MSG_UNAUTHORIZED })
+}
+
+func AuthConnectToLDAPFailure(w http.ResponseWriter) {
+    w.WriteHeader(http.StatusUnauthorized);
+    json.NewEncoder(w).Encode(model.ErrorModel { ErrorCode: NOAUTHORIZED_LDAPCONNECT_FAILURE, Message: MSG_UNAUTHORIZED })
+}
+
+func GeneralServerError(w http.ResponseWriter, msg string) {
+    w.WriteHeader(http.StatusInternalServerError);
+    json.NewEncoder(w).Encode(model.ErrorModel { ErrorCode: SERVERERROR_GENERAL, Message: msg })
+}
 
 func GetInterviewFailed(w http.ResponseWriter, e error) {
     s := fmt.Sprint(MSG_GET_INTERVIEW_ERROR, " : ", e)
