@@ -15,9 +15,7 @@ var (
     ldapPort   uint16   = 3268
     baseDN     string   = "dc=*,dc=*"
     filter     string   = "(&(objectClass=user)(sAMAccountName=*)(memberOf=CN=*,OU=*,DC=*,DC=*))"
-    Attributes []string = []string{"memberof"}
-    user       string   = "q4vy@nordstrom.net"
-    passwd     string   = "Walking*1out"
+    Attributes []string = []string{"memberof"}    
 )
 
 
