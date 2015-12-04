@@ -7,6 +7,7 @@ import (
     "interview/httperror"
     "io/ioutil"
     "net/http"
+    "strings"
     //"time"
 )
 
@@ -15,7 +16,7 @@ var (
     ldapPort   uint16   = 3268
     baseDN     string   = "dc=*,dc=*"
     filter     string   = "(&(objectClass=user)(sAMAccountName=*)(memberOf=CN=*,OU=*,DC=*,DC=*))"
-    Attributes []string = []string{"memberof"}    
+    Attributes []string = []string{"memberof"}
 )
 
 
@@ -24,15 +25,27 @@ func TokenHandler(signingKey []byte) http.HandlerFunc {
         // TODO: validate the version
         switch r.Method {
             case "POST":
-                //w.Write([]byte(r.Body))
                 b, err := ioutil.ReadAll(r.Body);
-
-                if err == nil {
-                    s := fmt.Sprint(string(b), "\n")
-                    w.Write([]byte(s))
+                if len(b) == 0 || err != nil {
+                    httperror.NoRequestBody(w)
                     return
-                } else {
-                    w.Write([]byte("Error strying to read body"))
+                }
+
+                parts := strings.Split(string(b), "&")
+                if len(parts) != 2 {
+                    httperror.InvalidRequestBody(w)
+                    return
+                }
+
+                uname := strings.Split(parts[0], "=")
+                if len(uname) != 2 {
+                    httperror.InvalidRequestBody(w)
+                    return
+                }
+
+                pwd := strings.Split(parts[1], "=")
+                if len(pwd) != 2 {
+                    httperror.InvalidRequestBody(w)
                     return
                 }
 
@@ -45,7 +58,8 @@ func TokenHandler(signingKey []byte) http.HandlerFunc {
                 defer l.Close()
                 // l.Debug = true
 
-                err = l.Bind(user, passwd)
+                dname := fmt.Sprint(uname[1], "@nordstrom.net")
+                err = l.Bind(dname, pwd[1])
                 if err != nil {
                     httperror.Unauthorized(w)
                     return

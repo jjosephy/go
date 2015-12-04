@@ -18,27 +18,41 @@ const (
     MSG_INTERVIEW_NOTFOUND                = "Interview not found"
     MSG_INTERVIEW_INVALIDID               = "Invalid Interview Id"
     MSG_UNAUTHORIZED                      = "Unauthorized"
+    MSG_NOREQUESTBODY                     = "No Request Body Provided"
+    MSG_INVALIDREQUESTBODY                = "Invalid Request Body Provided"
 )
 
-// 400 Errors
-const BADREQUEST_NOINPUTPARAMETERS                  = 3000
-const BADREQUEST_NOVERSION                          = 3001
-const BADREQUEST_INVALIDVERSION                     = 3002
-const BADREQUEST_UNSUPPORTEDVERSION                 = 3003
-const BADREQUEST_FAILED_DECODING_REQUEST_BODY       = 3004
-const BADREQUEST_INTERVIEW_INVALIDID                = 3005
+const (
+    // 400 Errors
+    BADREQUEST_NOINPUTPARAMETERS                  = 3000
+    BADREQUEST_NOVERSION                          = 3001
+    BADREQUEST_INVALIDVERSION                     = 3002
+    BADREQUEST_UNSUPPORTEDVERSION                 = 3003
+    BADREQUEST_FAILED_DECODING_REQUEST_BODY       = 3004
+    BADREQUEST_INTERVIEW_INVALIDID                = 3005
+    BADREQUEST_NOREQUESTBODY                      = 3006
+    BADREQUEST_INVALID_REQUESTBODY                = 3007
 
-// 404 Errors
-const NOTFOUND_INTERVIEW_NOTFOUND                   = 4000
+    // 404 Errors
+    NOTFOUND_INTERVIEW_NOTFOUND                   = 4000
 
-//401 Errors
-const NOAUTHORIZED_LDAPCONNECT_FAILURE             = 6000
-const NOAUTHORIZED_FAILURE                         = 6001
+    //401 Errors
+    NOAUTHORIZED_LDAPCONNECT_FAILURE             = 6000
+    NOAUTHORIZED_FAILURE                         = 6001
 
-// 500 Errors
-const SERVERERROR_GENERAL                          = 5000
-const SERVERERROR_GET_INTERVIEW_FAILURE            = 5001
-const SERVERERROR_SAVE_INTERVIEW_FAILURE           = 5002
+    // 500 Errors
+    SERVERERROR_GENERAL                          = 5000
+    SERVERERROR_GET_INTERVIEW_FAILURE            = 5001
+    SERVERERROR_SAVE_INTERVIEW_FAILURE           = 5002
+)
+
+func InvalidRequestBody(w http.ResponseWriter) {
+    writeBadRequest(w, BADREQUEST_INVALID_REQUESTBODY, MSG_NOREQUESTBODY)
+}
+
+func NoRequestBody(w http.ResponseWriter) {
+    writeBadRequest(w, BADREQUEST_NOREQUESTBODY, MSG_NOREQUESTBODY)
+}
 
 func Unauthorized(w http.ResponseWriter) {
     w.WriteHeader(http.StatusUnauthorized);
