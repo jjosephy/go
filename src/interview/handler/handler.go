@@ -92,7 +92,7 @@ func InterviewHandler(data repository.InterviewRepository) http.HandlerFunc {
                       httperror.UnsupportedVersion(w)
                       return;
               }
-              
+
               m, err := data.SaveInterview(m)
               if err != nil {
                   httperror.SaveInterviewFailed(w, err)

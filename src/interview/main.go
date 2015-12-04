@@ -32,7 +32,6 @@ func main() {
     mux.Handle("/", http.FileServer(http.Dir("/home/jjosephy/Source/go/src/interview/web")))
     mux.HandleFunc("/interview", handler.InterviewHandler(&repo))
     mux.HandleFunc("/token", handler.TokenHandler(&p))
-    mux.HandleFunc("/auth", handler.AuthHandler(signingKey))
 
     fmt.Println("Server Running")
 

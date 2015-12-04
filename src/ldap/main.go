@@ -4,11 +4,11 @@ import (
     //"crypto/x509"
     "fmt"
     "github.com/dgrijalva/jwt-go"
-    //"github.com/nmcclain/ldap"
+    "github.com/nmcclain/ldap"
     "log"
     //"golang.org/x/oauth2"
-    "time"
-    "io/ioutil"
+    //"time"
+    //"io/ioutil"
     //"os"
     //"fmt"
     //"encoding/pem"
@@ -16,7 +16,7 @@ import (
 
 var (
 	ldapServer string   = "nordstrom.net"
-	ldapPort   uint16   = 3268 //389 //636 //3268
+	ldapPort   uint16   = 636 //389 //3268 //389 //636 //3268
 	baseDN     string   = "dc=*,dc=*"
 	filter     string   = "(&(objectClass=user)(sAMAccountName=*)(memberOf=CN=*,OU=*,DC=*,DC=*))"
 	Attributes []string = []string{"memberof"}
@@ -93,6 +93,22 @@ var (
 
 func main() {
 
+    l, err := ldap.DialTLS("tcp", fmt.Sprintf("%s:%d", ldapServer, ldapPort), nil)
+    if err != nil {
+        log.Fatalf("ERROR: %s\n", err.Error())
+        return
+    }
+    defer l.Close()
+    // l.Debug = true
+
+    err = l.Bind(user, passwd)
+    if err != nil {
+        log.Printf("ERROR: Cannot bind: %s\n", err.Error())
+        return
+    }
+
+    log.Printf("success")
+
     /*
     var pemBytes = `-----BEGIN EC PRIVATE KEY-----
     MHcCAQEEIKGOgzn9u8RCSwwJj0sGOog6QGpDNkCuBRNsv76bRXLYoAoGCCqGSM49
@@ -141,6 +157,7 @@ func main() {
 */
     //ParseECPrivateKey(der []byte) (key *ecdsa.PrivateKey, err error)
 
+    /*
     var e error
 
     if jwtTestDefaultKey, e = ioutil.ReadFile("cert.pem"); e != nil {
@@ -164,12 +181,13 @@ func main() {
     log.Println("")
 
     token, err := jwt.Parse(tokenString, defaultKeyFunc)
-    /*
+
     token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
         return defaultKeyFunc(token.Header["kid"]), nil
     })
     */
 
+    /*
     log.Println("h %v", token.Valid)
 
     if token.Valid {
@@ -186,27 +204,13 @@ func main() {
     } else {
         fmt.Println("Couldn't handle this token:", err)
     }
-
+    */
 
     //ExampleToken()
     //ExampleConfig()
 
     /*
-    l, err := ldap.Dial("tcp", fmt.Sprintf("%s:%d", ldapServer, ldapPort))
-    if err != nil {
-        log.Fatalf("ERROR: %s\n", err.Error())
-        return
-    }
-    defer l.Close()
-    // l.Debug = true
 
-    err = l.Bind(user, passwd)
-    if err != nil {
-        log.Printf("ERROR: Cannot bind: %s\n", err.Error())
-        return
-    }
-
-    log.Printf("success")
     */
 
     /*
