@@ -2,6 +2,7 @@ package main
 
 import (
     "fmt"
+    "interview/authentication"
     "interview/handler"
     "interview/repository"
     "io/ioutil"
@@ -18,17 +19,19 @@ const (
 func main() {
     var e error
     var signingKey []byte
-    if signingKey, e = ioutil.ReadFile("cert.pem"); e != nil {
+    if signingKey, e = ioutil.ReadFile(PUBLIC_KEY); e != nil {
         panic(e)
     }
+
+    // TODO: figure out injection pattern and config
+    p := authentication.SimpleAuthProvider { SigningKey : signingKey }
+    repo := repository.DBInterviewRepository{ Uri: "mongodb://localhost" }
 
     mux := http.NewServeMux()
     // TODO: figure out path and a better way to configure
     mux.Handle("/", http.FileServer(http.Dir("/home/jjosephy/Source/go/src/interview/web")))
-    // TODO: figure out injection pattern and config
-    repo := repository.DBInterviewRepository{ Uri: "mongodb://localhost" }
     mux.HandleFunc("/interview", handler.InterviewHandler(&repo))
-    mux.HandleFunc("/token", handler.TokenHandler(signingKey))
+    mux.HandleFunc("/token", handler.TokenHandler(&p))
     mux.HandleFunc("/auth", handler.AuthHandler(signingKey))
 
     fmt.Println("Server Running")
