@@ -16,7 +16,8 @@ import (
 
 var (
 	ldapServer string   = "nordstrom.net"
-	ldapPort   uint16   = 636 //389 //3268 //389 //636 //3268
+	ldapPort   uint16   = 389 //636 //389 //3268 //389 //636 //3268s
+
 	baseDN     string   = "dc=*,dc=*"
 	filter     string   = "(&(objectClass=user)(sAMAccountName=*)(memberOf=CN=*,OU=*,DC=*,DC=*))"
 	Attributes []string = []string{"memberof"}
@@ -93,7 +94,7 @@ var (
 
 func main() {
 
-    l, err := ldap.DialTLS("tcp", fmt.Sprintf("%s:%d", ldapServer, ldapPort), nil)
+    l, err := ldap.Dial("tcp", fmt.Sprintf("%s:%d", ldapServer, ldapPort))
     if err != nil {
         log.Fatalf("ERROR: %s\n", err.Error())
         return
