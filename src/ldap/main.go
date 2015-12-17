@@ -4,8 +4,9 @@ import (
     //"crypto/x509"
     "fmt"
     "github.com/dgrijalva/jwt-go"
-    "github.com/nmcclain/ldap"
-    "log"
+    //"github.com/nmcclain/ldap"
+    "github.com/mqu/openldap"
+    //"log"
     //"golang.org/x/oauth2"
     //"time"
     //"io/ioutil"
@@ -15,14 +16,14 @@ import (
 )
 
 var (
-	ldapServer string   = "nordstrom.net"
-	ldapPort   uint16   = 389 //636 //389 //3268 //389 //636 //3268s
+	ldapServer string   = "nordstrom.net" //"nordstrom.net"
+	ldapPort   uint16   = 636 //636 //389 //3268 //389 //636 //3268s
 
 	baseDN     string   = "dc=*,dc=*"
 	filter     string   = "(&(objectClass=user)(sAMAccountName=*)(memberOf=CN=*,OU=*,DC=*,DC=*))"
 	Attributes []string = []string{"memberof"}
-	user       string   = "q4vy@nordstrom.net"
-	passwd     string   = "Walking*1out"
+	user       string   = ""
+	passwd     string   = ""
 )
 
 
@@ -94,7 +95,36 @@ var (
 
 func main() {
 
-    l, err := ldap.Dial("tcp", fmt.Sprintf("%s:%d", ldapServer, ldapPort))
+    var user, passwd, url string
+
+  	// (1) - connexion options
+  	url = "ldaps://nordstrom.net:636/"
+    //LDAP0319.nordstrom.net, LDAP0860.nordstrom.net
+  	// url = "ldaps://some.host:636/"
+
+  	ldap, err := openldap.Initialize(url)
+
+  	if err != nil {
+  		fmt.Printf("LDAP::Initialize() : connexion error\n")
+  		return
+  	}
+
+  	// (2.1) - options
+  	ldap.SetOption(openldap.LDAP_OPT_PROTOCOL_VERSION, openldap.LDAP_VERSION3)
+
+  	// (2.2) - authentification (Bind)
+  	err = ldap.Bind(user, passwd)
+  	if err != nil {
+  		fmt.Printf("LDAP::Bind() : bind error\n")
+  		fmt.Println(err)
+  		return
+  	}
+
+    fmt.Println("Success")
+  	defer ldap.Close()
+
+  /*
+    l, err := ldap.DialTLS("tcp", fmt.Sprintf("%s:%d", ldapServer, ldapPort), nil)
     if err != nil {
         log.Fatalf("ERROR: %s\n", err.Error())
         return
@@ -109,7 +139,7 @@ func main() {
     }
 
     log.Printf("success")
-
+    */
     /*
     var pemBytes = `-----BEGIN EC PRIVATE KEY-----
     MHcCAQEEIKGOgzn9u8RCSwwJj0sGOog6QGpDNkCuBRNsv76bRXLYoAoGCCqGSM49
