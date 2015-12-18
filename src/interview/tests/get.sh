@@ -6,4 +6,4 @@ then
     exit
 fi
 
-curl --header "api-version: 1.0" http://localhost:8080/interview?id=$1
+curl --noproxy localhost, -i -k --header "api-version: 1.0" https://localhost:8443/interview?id=$1

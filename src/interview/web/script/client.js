@@ -5,7 +5,7 @@ function Client() {
 Client.SaveInterview = function(i, success, error) {
     var s = JSON.stringify(i);
     $.ajax({
-        url : 'http://localhost:8080/interview',
+        url : 'https://localhost:8443/interview',
         type: 'POST',
         data : s,
         headers: {
@@ -18,7 +18,7 @@ Client.SaveInterview = function(i, success, error) {
 
 Client.GetInterview = function(id, cname, success, error) {
     $.ajax({
-        url : 'http://localhost:8080/interview?id=' + id,
+        url : 'https://localhost:8443/interview?id=' + id,
         type: 'GET',
         headers: {
             "Api-Version":  1.0
@@ -26,4 +26,8 @@ Client.GetInterview = function(id, cname, success, error) {
         success: success,
         error: error,
     });
+}
+
+Client.GetToken = function() {
+    
 }

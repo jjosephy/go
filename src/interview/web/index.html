@@ -12,7 +12,31 @@
         <script src="/ui/header.js" type="text/jsx"></script>
         <script src="/ui/dialog.js" type="text/jsx"></script>
         <script type="text/jsx">
+            function parseCookie() {
+                //eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE0NTA0OTY4ODh9.Wut89Z_g4r9-v3luToePCFLDNgx27n9yFcJj5BFg0_Q
+
+            }
+
+            function setCookie() {
+                var ex = new Date();
+                var result = new Date();
+                result.setDate(ex.getDate() + 1);
+                document.cookie = 'token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE0NTA0OTY4ODh9.Wut89Z_g4r9-v3luToePCFLDNgx27n9yFcJj5BFg0_Q; Path=/; Expires=' + result + ';';
+                alertCookie();
+            }
+
+            function deleteCookie() {
+                document.cookie = 'token=; Path=/; Expires= Expires=Thu, 01 Jan 1970 00:00:01 GMT'
+                alertCookie();
+            }
+
+            function alertCookie() {
+                document.getElementById("txt").innerText = document.cookie;
+            }
+
             $(document).ready(function() {
+                //check authentication
+
                 var dialog = React.render(
                     <Dialog />,
                     document.getElementById('dialog')
@@ -22,8 +46,6 @@
                     <Header dialog={dialog} />,
                     document.getElementById('header')
                 );
-
-
 
                 //h.newHandler();
                 /*
@@ -48,6 +70,13 @@
             }
         </script>
     </head>
+    <button onclick="setCookie();">Set</button>
+    <br />
+    <button onclick="deleteCookie();">Delete</button>
+    </br>
+    <button onclick="alertCookie();">Alert</button>
+    </br>
+    <div id="txt"></div>
     <body>
         <div id="header">
         </div>

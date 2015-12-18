@@ -2,6 +2,7 @@ package handler
 
 import (
     "encoding/json"
+    "fmt"
     "interview/converter"
     "interview/httperror"
     "interview/repository"
@@ -78,6 +79,7 @@ func InterviewHandler(data repository.InterviewRepository) http.HandlerFunc {
               }
 
           case "POST":
+              fmt.Println("this is a test")
               // check to see if body is null
               var m model.InterviewModel
               switch version {
