@@ -2,10 +2,10 @@ package main
 
 import (
     //"crypto/x509"
-    "fmt"
+    //"fmt"
     "github.com/dgrijalva/jwt-go"
     //"github.com/nmcclain/ldap"
-    "github.com/mqu/openldap"
+    //"github.com/mqu/openldap"
     //"log"
     //"golang.org/x/oauth2"
     //"time"
@@ -93,8 +93,9 @@ var (
     defaultKeyFunc    jwt.Keyfunc = func(t *jwt.Token) (interface{}, error) { return jwtTestDefaultKey, nil }
 )
 
-func main() {
 
+func main() {
+    /*
     var user, passwd, url string
 
   	// (1) - connexion options
@@ -122,7 +123,7 @@ func main() {
 
     fmt.Println("Success")
   	defer ldap.Close()
-
+    */
   /*
     l, err := ldap.DialTLS("tcp", fmt.Sprintf("%s:%d", ldapServer, ldapPort), nil)
     if err != nil {
