@@ -1,7 +1,7 @@
 package authentication
 
 import (
-
+    "errors"
 )
 
 type SimpleAuthProvider struct {
@@ -9,6 +9,11 @@ type SimpleAuthProvider struct {
 }
 
 func (p *SimpleAuthProvider) AuthenticateUser(name string, pwd string) (string, error) {
+
+    if name == "tuser" && pwd == "fail" {
+        return "", errors.New("invalid user")
+    }
+
     return GenerateToken(p.SigningKey)
 }
 

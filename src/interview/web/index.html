@@ -6,23 +6,50 @@
         <script src="/script/JSXTransformer.js"></script>
         <script src="/script/jquery-2.1.4.min.js"></script>
         <script src="/script/client.js"></script>
+        <script src="/ui/content.js" type="text/jsx"></script>
         <script src="/ui/panel.js" type="text/jsx"></script>
         <script src="/ui/forms.js" type="text/jsx"></script>
+        <script src="/ui/login.js" type="text/jsx"></script>
         <script src="/ui/menuItem.js" type="text/jsx"></script>
         <script src="/ui/header.js" type="text/jsx"></script>
         <script src="/ui/dialog.js" type="text/jsx"></script>
         <script type="text/jsx">
             function parseCookie() {
-                //eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE0NTA0OTY4ODh9.Wut89Z_g4r9-v3luToePCFLDNgx27n9yFcJj5BFg0_Q
+                var i = document.cookie.split(';');
+                if (!i[0]) {
+                    return null;
+                }
 
+                t = i[0].split('=')
+
+                if (t[0] === 'token') {
+                    return t[1];
+                }
+
+                return null;
             }
 
             function setCookie() {
-                var ex = new Date();
-                var result = new Date();
-                result.setDate(ex.getDate() + 1);
-                document.cookie = 'token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE0NTA0OTY4ODh9.Wut89Z_g4r9-v3luToePCFLDNgx27n9yFcJj5BFg0_Q; Path=/; Expires=' + result + ';';
-                alertCookie();
+                var t = Client.GetToken(
+                    'w',
+                    'w',
+                    function(data, textStatus, jqXHR) {
+                        t = data;
+                        var ex = new Date();
+                        var date = new Date();
+                        date.setDate(ex.getDate() + 1);
+                        document.cookie = 'token=' + t;
+                        document.cookie = 'Path=/';
+                        document.cookie = 'Expires=' + date;
+                        alertCookie();
+                    },
+                    function (jqXHR, textStatus, errorThrown) {
+                        var res = JSON.parse(jqXHR.responseText);
+                        var msg = "Error Code: " + res.ErrorCode + " Message: " + res.Message;
+                        console.log(msg);
+                        document.getElementById('footer').innerText = msg;
+                    }
+                );
             }
 
             function deleteCookie() {
@@ -31,21 +58,36 @@
             }
 
             function alertCookie() {
-                document.getElementById("txt").innerText = document.cookie;
+                document.getElementById('footer').innerHTML = ' Cookie ' + document.cookie;
             }
 
             $(document).ready(function() {
                 //check authentication
+                var c = parseCookie();
+                if (c === null) {
+                    document.getElementById('footer').innerHTML = 'null cookie';
+                    var login = React.render(
+                        <Login />,
+                        document.getElementById('content')
+                    );
+                } else {
+                    document.getElementById('footer').innerHTML = c;
 
-                var dialog = React.render(
-                    <Dialog />,
-                    document.getElementById('dialog')
-                );
+                    var c = React.render(
+                        <Content />,
+                        document.getElementById('content')
+                    );
 
-                var h = React.render(
-                    <Header dialog={dialog} />,
-                    document.getElementById('header')
-                );
+                    var dialog = React.render(
+                        <Dialog />,
+                        document.getElementById('dialog')
+                    );
+
+                    var h = React.render(
+                        <Header dialog={dialog} />,
+                        document.getElementById('header')
+                    );
+                }
 
                 //h.newHandler();
                 /*
@@ -81,7 +123,6 @@
         <div id="header">
         </div>
         <div id="content">
-            Create a new Interview of click Find to find an existing interview.
         </div>
         <div id="footer">
             Status

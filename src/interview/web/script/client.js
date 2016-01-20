@@ -28,6 +28,15 @@ Client.GetInterview = function(id, cname, success, error) {
     });
 }
 
-Client.GetToken = function() {
-    
+Client.GetToken = function(uname, pwd, success, error) {
+    $.ajax({
+        url : 'https://localhost:8443/token',
+        type: 'POST',
+        data: 'uname=' + uname + '&pwd=' + pwd,
+        headers: {
+            "Api-Version":  1.0
+        },
+        success: success,
+        error: error,
+    });
 }
