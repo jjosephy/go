@@ -3,10 +3,10 @@ package handler
 import (
     "encoding/json"
     "fmt"
-    "interview/converter"
-    "interview/httperror"
-    "interview/repository"
-    "interview/model"
+    "github.com/jjosephy/interview/converter"
+    "github.com/jjosephy/interview/httperror"
+    "github.com/jjosephy/interview/repository"
+    "github.com/jjosephy/interview/model"
     "net/http"
     "strconv"
 )

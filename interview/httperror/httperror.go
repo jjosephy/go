@@ -3,7 +3,7 @@ package httperror
 import (
     "encoding/json"
     "fmt"
-    "interview/model"
+    "github.com/jjosephy/interview/model"
     "net/http"
 )
 
