@@ -169,6 +169,29 @@ select {
     margin:-100px 0 0 -150px;
 }
 
+.login {
+    width:50%;
+    height:50%;
+    position:absolute;
+    left:55%;
+    top:100px;
+    margin:-100px 0 0 -150px;
+}
+
+.login .label {
+    margin-top: 20px;
+    font-size: .7em;
+}
+
+.login input {
+    width: 200px;
+    font-size: .6em;
+}
+
+.login .button {
+    margin-top: 20px;
+}
+
 .buttonRight {
     background-color: #cccccc;
     color: #333333;
