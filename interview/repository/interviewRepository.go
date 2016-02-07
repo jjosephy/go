@@ -21,8 +21,8 @@ type DBInterviewRepository struct {
     Uri string
 }
 
-func (r *DBInterviewRepository) GetConnection()(error) {
-    var err error
+func (r *DBInterviewRepository) GetConnection()(err error) {
+
     if r.Uri == "" {
         return errors.New("address for database not configured")
     }
@@ -35,6 +35,7 @@ func (r *DBInterviewRepository) GetConnection()(error) {
     timeout := 5 * time.Second
     r.DBSession, err = mgo.DialWithTimeout(r.Uri, timeout)
     if err != nil {
+        fmt.Println("err trying to dial: ", err)
         return err
     }
 
@@ -51,12 +52,10 @@ func (r *DBInterviewRepository) GetConnection()(error) {
 		Sparse:     true,
 	}
 	err = r.DBSession.DB("interview").C("interviews").EnsureIndex(index)
-    */
-
     if err != nil {
         return err
     }
-
+    */
     return  nil
 }
 
@@ -74,22 +73,47 @@ func(r *DBInterviewRepository) SaveInterview(m model.InterviewModel) (model.Inte
     return m, nil
 }
 
-func(r *DBInterviewRepository) GetInterview(id string, name string) (model.InterviewModel, error) {
-    var m model.InterviewModel
+func(r *DBInterviewRepository) GetInterview(id string, name string) (m model.InterviewModel, err error) {
+    //var m model.InterviewModel
+    //var err error
+
     defer func() {
-        if e := recover(); e != nil {
-            fmt.Printf("pkg:  %v", e)
-            //return m, e
+
+        if err != nil {
+            fmt.Println("error is not nil %v", err)
         }
 
-        if r.DBSession != nil {
-            r.DBSession.Close()
+        e := recover()
+
+        if e == nil {
+            fmt.Println("Empty error in defer")
+        } else {
+            fmt.Printf("pkg:  %v", e)
+            fmt.Println("")
         }
+
+
+        switch x := e.(type) {
+    		case string:
+    			err = errors.New(x)
+    		case error:
+    			err = x
+    		default:
+    			//err = errors.New("Unknown panic in defer::GetInterview")
+                //err = nil
+		}
+
+        //fmt.Println("err: ",  fmt.Println(err.(*errors.Error).ErrorStack()))
+
+        //if r.DBSession != nil {
+        //    r.DBSession.Close()
+        //}
+
         // TODO: log failure
         //return nil, nil
     }()
 
-    if err := r.GetConnection(); err != nil {
+    if err = r.GetConnection(); err != nil {
         return m, err
     }
 
@@ -104,7 +128,7 @@ func(r *DBInterviewRepository) GetInterview(id string, name string) (model.Inter
     // TODO: find by candidate name
     m = model.InterviewModel{}
     bid := bson.ObjectIdHex(id)
-    err := r.DBSession.DB("interview").C("interviews").FindId(bid).One(&m)
+    err = r.DBSession.DB("interview").C("interviews").FindId(bid).One(&m)
 
     if err != nil {
         return m, err
