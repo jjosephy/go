@@ -2,8 +2,9 @@ package repository
 
 import (
     "errors"
-    "gopkg.in/mgo.v2"
-    "gopkg.in/mgo.v2/bson"
+    "fmt"
+    "labix.org/v2/mgo"
+    "labix.org/v2/mgo/bson"
     "github.com/jjosephy/go/interview/model"
     "time"
 )
@@ -20,22 +21,24 @@ type DBInterviewRepository struct {
     Uri string
 }
 
-func (r *DBInterviewRepository) CheckConnection()(error) {
+func (r *DBInterviewRepository) GetConnection()(error) {
     var err error
-
     if r.Uri == "" {
         return errors.New("address for database not configured")
     }
+
     if r.DBSession != nil {
         return nil
     }
 
     // TODO: there is a bug here when session is closed we never reopen it. Need Retry
-    timeout := 10 * time.Second
+    timeout := 5 * time.Second
     r.DBSession, err = mgo.DialWithTimeout(r.Uri, timeout)
     if err != nil {
         return err
     }
+
+    r.DBSession.SetMode(mgo.Monotonic, true)
 
     // TODO: Unique index on _id
     /*
@@ -51,7 +54,6 @@ func (r *DBInterviewRepository) CheckConnection()(error) {
     */
 
     if err != nil {
-        defer r.DBSession.Close()
         return err
     }
 
@@ -59,7 +61,7 @@ func (r *DBInterviewRepository) CheckConnection()(error) {
 }
 
 func(r *DBInterviewRepository) SaveInterview(m model.InterviewModel) (model.InterviewModel, error) {
-    if err := r.CheckConnection(); err != nil {
+    if err := r.GetConnection(); err != nil {
         return m, err
     }
 
@@ -68,13 +70,26 @@ func(r *DBInterviewRepository) SaveInterview(m model.InterviewModel) (model.Inte
         return m, err
     }
 
+    defer r.DBSession.Close()
     return m, nil
 }
 
 func(r *DBInterviewRepository) GetInterview(id string, name string) (model.InterviewModel, error) {
     var m model.InterviewModel
+    defer func() {
+        if e := recover(); e != nil {
+            fmt.Printf("pkg:  %v", e)
+            //return m, e
+        }
 
-    if err := r.CheckConnection(); err != nil {
+        if r.DBSession != nil {
+            r.DBSession.Close()
+        }
+        // TODO: log failure
+        //return nil, nil
+    }()
+
+    if err := r.GetConnection(); err != nil {
         return m, err
     }
 

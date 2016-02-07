@@ -2,7 +2,7 @@ package converter
 
 import (
     "encoding/json"
-    "gopkg.in/mgo.v2/bson"
+    "labix.org/v2/mgo/bson"
     "github.com/jjosephy/go/interview/contract/v1"
     "github.com/jjosephy/go/interview/model"
     "io"

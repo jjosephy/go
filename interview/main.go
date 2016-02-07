@@ -32,11 +32,8 @@ func main() {
     mux.Handle("/", http.FileServer(http.Dir("../src/github.com/jjosephy/go/interview/web")))
     mux.HandleFunc("/interview", handler.InterviewHandler(&repo))
     mux.HandleFunc("/token", handler.TokenHandler(&p))
-
-    fmt.Println("Server Running")
-
     err := http.ListenAndServeTLS(PORT, PUBLIC_KEY, PRIV_KEY, mux)
     if err != nil {
        fmt.Printf("main(): %s\n", err)
-   }
+    }
 }

@@ -2,7 +2,7 @@ package handler
 
 import (
     "encoding/json"
-    "fmt"
+    //"fmt"
     "github.com/jjosephy/go/interview/converter"
     "github.com/jjosephy/go/interview/httperror"
     "github.com/jjosephy/go/interview/repository"
@@ -79,7 +79,6 @@ func InterviewHandler(data repository.InterviewRepository) http.HandlerFunc {
               }
 
           case "POST":
-              fmt.Println("this is a test")
               // check to see if body is null
               var m model.InterviewModel
               switch version {
