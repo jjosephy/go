@@ -2,7 +2,6 @@ package repository
 
 import (
     "errors"
-    "fmt"
     "labix.org/v2/mgo"
     "labix.org/v2/mgo/bson"
     "github.com/jjosephy/go/interview/model"
@@ -17,29 +16,23 @@ type InterviewRepository interface {
 
 // DBInterviewRespository Implementation //
 type DBInterviewRepository struct {
-    DBSession *mgo.Session
     Uri string
 }
 
-func (r *DBInterviewRepository) GetConnection()(err error) {
+func (r *DBInterviewRepository) getConnection()(s *mgo.Session, err error) {
 
     if r.Uri == "" {
-        return errors.New("address for database not configured")
+        return nil, errors.New("address for database not configured")
     }
 
-    if r.DBSession != nil {
-        return nil
-    }
-
-    // TODO: there is a bug here when session is closed we never reopen it. Need Retry
     timeout := 5 * time.Second
-    r.DBSession, err = mgo.DialWithTimeout(r.Uri, timeout)
+    s, err = mgo.DialWithTimeout(r.Uri, timeout)
     if err != nil {
-        fmt.Println("err trying to dial: ", err)
-        return err
+        return nil, err
     }
 
-    r.DBSession.SetMode(mgo.Monotonic, true)
+    s.SetMode(mgo.Monotonic, true)
+    return  s, nil
 
     // TODO: Unique index on _id
     /*
@@ -56,64 +49,38 @@ func (r *DBInterviewRepository) GetConnection()(err error) {
         return err
     }
     */
-    return  nil
 }
 
-func(r *DBInterviewRepository) SaveInterview(m model.InterviewModel) (model.InterviewModel, error) {
-    if err := r.GetConnection(); err != nil {
+func(r *DBInterviewRepository) SaveInterview(m model.InterviewModel) (mi model.InterviewModel, err error) {
+    var s *mgo.Session = nil
+    defer func() {
+        if s != nil {
+            s.Close()
+        }
+    }()
+
+    if s, err = r.getConnection(); err != nil {
         return m, err
     }
 
     m.Id = bson.NewObjectId()
-    if err := r.DBSession.DB("interview").C("interviews").Insert(&m); err != nil {
+    if err = s.DB("interview").C("interviews").Insert(&m); err != nil {
         return m, err
     }
 
-    defer r.DBSession.Close()
+    defer s.Close()
     return m, nil
 }
 
 func(r *DBInterviewRepository) GetInterview(id string, name string) (m model.InterviewModel, err error) {
-    //var m model.InterviewModel
-    //var err error
-
+    var s *mgo.Session = nil
     defer func() {
-
-        if err != nil {
-            fmt.Println("error is not nil %v", err)
+        if s != nil {
+            s.Close()
         }
-
-        e := recover()
-
-        if e == nil {
-            fmt.Println("Empty error in defer")
-        } else {
-            fmt.Printf("pkg:  %v", e)
-            fmt.Println("")
-        }
-
-
-        switch x := e.(type) {
-    		case string:
-    			err = errors.New(x)
-    		case error:
-    			err = x
-    		default:
-    			//err = errors.New("Unknown panic in defer::GetInterview")
-                //err = nil
-		}
-
-        //fmt.Println("err: ",  fmt.Println(err.(*errors.Error).ErrorStack()))
-
-        //if r.DBSession != nil {
-        //    r.DBSession.Close()
-        //}
-
-        // TODO: log failure
-        //return nil, nil
     }()
 
-    if err = r.GetConnection(); err != nil {
+    if s, err = r.getConnection(); err != nil {
         return m, err
     }
 
@@ -128,7 +95,7 @@ func(r *DBInterviewRepository) GetInterview(id string, name string) (m model.Int
     // TODO: find by candidate name
     m = model.InterviewModel{}
     bid := bson.ObjectIdHex(id)
-    err = r.DBSession.DB("interview").C("interviews").FindId(bid).One(&m)
+    err = s.DB("interview").C("interviews").FindId(bid).One(&m)
 
     if err != nil {
         return m, err
