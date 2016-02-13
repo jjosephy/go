@@ -3,9 +3,9 @@ package converter
 import (
     "bytes"
     "encoding/json"
-    "gopkg.in/mgo.v2/bson"
-    "interview/contract/v1"
-    "interview/model"
+    "labix.org/v2/mgo/bson"
+    "github.com/jjosephy/go/interview/contract/v1"
+    "github.com/jjosephy/go/interview/model"
     "io"
     "testing"
 )
