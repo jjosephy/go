@@ -55,10 +55,40 @@
             function deleteCookie() {
                 document.cookie = 'token=; Path=/; Expires= Expires=Thu, 01 Jan 1970 00:00:01 GMT'
                 alertCookie();
+                renderLogin();
             }
 
             function alertCookie() {
                 document.getElementById('footer').innerHTML = ' Cookie ' + document.cookie;
+            }
+
+            function renderAuthencticated() {
+                var c = React.render(
+                    <Content />,
+                    document.getElementById('content')
+                );
+
+                var dialog = React.render(
+                    <Dialog />,
+                    document.getElementById('dialog')
+                );
+
+                var h = React.render(
+                    <Header dialog={dialog} show='true'/>,
+                    document.getElementById('header')
+                );
+            }
+
+            function renderLogin() {
+                var login = React.render(
+                    <Login />,
+                    document.getElementById('content')
+                );
+
+                var h = React.render(
+                    <Header dialog={dialog} show='false'/>,
+                    document.getElementById('header')
+                );
             }
 
             $(document).ready(function() {
@@ -66,27 +96,10 @@
                 var c = parseCookie();
                 if (c === null) {
                     document.getElementById('footer').innerHTML = 'null cookie';
-                    var login = React.render(
-                        <Login />,
-                        document.getElementById('content')
-                    );
+                    renderLogin();
                 } else {
                     document.getElementById('footer').innerHTML = c;
-
-                    var c = React.render(
-                        <Content />,
-                        document.getElementById('content')
-                    );
-
-                    var dialog = React.render(
-                        <Dialog />,
-                        document.getElementById('dialog')
-                    );
-
-                    var h = React.render(
-                        <Header dialog={dialog} />,
-                        document.getElementById('header')
-                    );
+                    renderAuthencticated();
                 }
 
                 //h.newHandler();
@@ -119,7 +132,7 @@
     </br>
     <button onclick="alertCookie();">Alert</button>
     </br>
-    -->
+    -->    
     <div id="txt"></div>
     <body>
         <div id="header">

@@ -1,6 +1,5 @@
 var Login = React.createClass({displayName: 'Login',
     setCookie: function () {
-        alert('here');
         var t = Client.GetToken(
             'w',
             'w',
@@ -13,6 +12,7 @@ var Login = React.createClass({displayName: 'Login',
                 document.cookie = 'Path=/';
                 document.cookie = 'Expires=' + date;
                 alertCookie();
+                renderAuthencticated();
             },
             function (jqXHR, textStatus, errorThrown) {
                 var res = JSON.parse(jqXHR.responseText);
