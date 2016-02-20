@@ -21,8 +21,7 @@ type R struct {
 }
 
 
-"gopkg.in/mgo.v2"
-"gopkg.in/mgo.v2/bson"
+
 
 s, err := mgo.Dial("mongodb://localhost")
         if err != nil {

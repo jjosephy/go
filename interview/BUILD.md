@@ -5,7 +5,6 @@
 * [Mgo Bson](https://labix.org/gobson)
 
 Install Instructions for Mgo Packages
-go get gopkg.in/mgo.v2
-go get gopkg.in/mgo.v2/bson
+
 go get github.com/dgrijalva/jwt-go
 go get github.com/nmcclain/ldap
